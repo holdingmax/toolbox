@@ -66,6 +66,7 @@ model Herramienta {
   descripcion    String?
   url            String
   icono_url      String?
+  soporte        String?
   orden          Int      @default(0)
   activo         Boolean  @default(true)
   creado_en      DateTime @default(now())

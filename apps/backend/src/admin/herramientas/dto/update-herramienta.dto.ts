@@ -17,6 +17,10 @@ export class UpdateHerramientaDto {
   @IsOptional()
   icono_url?: string
 
+  @IsString()
+  @IsOptional()
+  soporte?: string
+
   @IsInt()
   @IsOptional()
   orden?: number

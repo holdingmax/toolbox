@@ -48,6 +48,7 @@ export class HerramientasAdminService {
         url: dto.url,
         descripcion: dto.descripcion ?? null,
         icono_url: dto.icono_url ?? null,
+        soporte: dto.soporte ?? null,
         orden: dto.orden ?? 0,
       },
     })
@@ -60,6 +61,7 @@ export class HerramientasAdminService {
     if (dto.url !== undefined) data.url = dto.url
     if (dto.descripcion !== undefined) data.descripcion = dto.descripcion
     if (dto.icono_url !== undefined) data.icono_url = dto.icono_url
+    if (dto.soporte !== undefined) data.soporte = dto.soporte
     if (dto.orden !== undefined) data.orden = dto.orden
     if (dto.activo !== undefined) data.activo = dto.activo
 

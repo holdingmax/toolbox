@@ -27,6 +27,7 @@ function HerramientaModal({ herramienta, onClose, onSaved }: HerramientaModalPro
   const [url, setUrl] = useState(herramienta?.url ?? '')
   const [descripcion, setDescripcion] = useState(herramienta?.descripcion ?? '')
   const [icono_url, setIconoUrl] = useState(herramienta?.icono_url ?? '')
+  const [soporte, setSoporte] = useState(herramienta?.soporte ?? '')
   const [orden, setOrden] = useState<string>(String(herramienta?.orden ?? ''))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +46,7 @@ function HerramientaModal({ herramienta, onClose, onSaved }: HerramientaModalPro
         url: url.trim(),
         descripcion: descripcion.trim() || undefined,
         icono_url: icono_url.trim() || undefined,
+        soporte: soporte.trim() || undefined,
         orden: orden !== '' ? Number(orden) : undefined,
       }
       if (isEdit) {
@@ -121,6 +123,17 @@ function HerramientaModal({ herramienta, onClose, onSaved }: HerramientaModalPro
               onChange={(e) => setDescripcion(e.target.value)}
               className={inputClass}
               placeholder="Descripción opcional"
+            />
+          </div>
+
+          <div>
+            <label className="block text-text-secondary text-sm mb-1">Soporte</label>
+            <input
+              type="text"
+              value={soporte}
+              onChange={(e) => setSoporte(e.target.value)}
+              className={inputClass}
+              placeholder="Nombre y apellido de quien da soporte"
             />
           </div>
 

@@ -115,6 +115,7 @@ export interface HerramientaAdmin {
   descripcion: string | null
   url: string
   icono_url: string | null
+  soporte: string | null
   orden: number
   activo: boolean
   creado_en: string
@@ -141,6 +142,7 @@ export interface CreateHerramientaPayload {
   url: string
   descripcion?: string
   icono_url?: string
+  soporte?: string
   orden?: number
 }
 
@@ -149,6 +151,7 @@ export interface UpdateHerramientaPayload {
   url?: string
   descripcion?: string
   icono_url?: string
+  soporte?: string
   orden?: number
   activo?: boolean
 }
