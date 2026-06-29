@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Rol {
+  id          String  @id @default(cuid())
+  nombre      String
+  descripcion String?
+  activo      Boolean @default(true)
+
+  usuarios Usuario[]
+
+  @@map("roles")
+}
+
+model Usuario {
+  id             String   @id @default(cuid())
+  nombre         String
+  email          String   @unique
+  password_hash  String
+  rol_id         String
+  activo         Boolean  @default(true)
+  creado_en      DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  rol               Rol               @relation(fields: [rol_id], references: [id], onDelete: Restrict)
+  permisos          PermisoNivel[]
+  historial_accesos HistorialAcceso[]
+
+  @@index([rol_id])
+  @@index([activo])
+  @@map("usuarios")
+}
+
+model Nivel {
+  id             String   @id @default(cuid())
+  nombre         String
+  descripcion    String?
+  parent_id      String?
+  tipo           String
+  ruta           String   @unique
+  orden          Int      @default(0)
+  icono_url      String?
+  activo         Boolean  @default(true)
+  creado_en      DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  parent               Nivel?             @relation("ArbolNiveles", fields: [parent_id], references: [id], onDelete: Restrict)
+  hijos                Nivel[]            @relation("ArbolNiveles")
+  herramientas_niveles HerramientaNivel[]
+  permisos             PermisoNivel[]
+
+  @@index([parent_id, activo, orden])
+  @@index([ruta])
+  @@index([tipo])
+  @@map("niveles")
+}
+
+model Herramienta {
+  id             String   @id @default(cuid())
+  nombre         String
+  descripcion    String?
+  url            String
+  icono_url      String?
+  orden          Int      @default(0)
+  activo         Boolean  @default(true)
+  creado_en      DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  herramientas_niveles HerramientaNivel[]
+  historial_accesos    HistorialAcceso[]
+
+  @@index([activo])
+  @@map("herramientas")
+}
+
+model HerramientaNivel {
+  id             String  @id @default(cuid())
+  herramienta_id String
+  nivel_id       String
+  activo         Boolean @default(true)
+
+  herramienta Herramienta @relation(fields: [herramienta_id], references: [id], onDelete: Restrict)
+  nivel       Nivel       @relation(fields: [nivel_id], references: [id], onDelete: Restrict)
+
+  @@unique([herramienta_id, nivel_id])
+  @@index([nivel_id, activo])
+  @@index([herramienta_id, activo])
+  @@map("herramientas_niveles")
+}
+
+model PermisoNivel {
+  id             String   @id @default(cuid())
+  usuario_id     String
+  nivel_id       String
+  activo         Boolean  @default(true)
+  creado_en      DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [usuario_id], references: [id], onDelete: Restrict)
+  nivel   Nivel   @relation(fields: [nivel_id], references: [id], onDelete: Restrict)
+
+  @@unique([usuario_id, nivel_id])
+  @@index([nivel_id, activo])
+  @@index([usuario_id, activo])
+  @@map("permisos_niveles")
+}
+
+model HistorialAcceso {
+  id             String   @id @default(cuid())
+  usuario_id     String
+  herramienta_id String
+  fecha_acceso   DateTime @default(now())
+  ip             String?
+  user_agent     String?
+
+  usuario     Usuario     @relation(fields: [usuario_id], references: [id], onDelete: Restrict)
+  herramienta Herramienta @relation(fields: [herramienta_id], references: [id], onDelete: Restrict)
+
+  @@index([usuario_id, fecha_acceso])
+  @@index([herramienta_id, fecha_acceso])
+  @@map("historial_accesos")
+}
