@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
@@ -129,6 +130,32 @@ export class AccesosService {
 
     herramientas.sort((a, b) => a.orden - b.orden)
     return { total: herramientas.length, herramientas }
+  }
+
+  async getMiHistorialCompleto(
+    usuarioId: string,
+    opts: { page: number; limit: number; desde?: string; hasta?: string },
+  ) {
+    const { page, limit, desde, hasta } = opts
+    const where: Prisma.HistorialAccesoWhereInput = { usuario_id: usuarioId }
+    if (desde || hasta) {
+      where.fecha_acceso = {}
+      if (desde) where.fecha_acceso.gte = new Date(desde)
+      if (hasta) where.fecha_acceso.lte = new Date(hasta)
+    }
+
+    const [total, data] = await Promise.all([
+      this.prisma.historialAcceso.count({ where }),
+      this.prisma.historialAcceso.findMany({
+        where,
+        include: { herramienta: { select: { id: true, nombre: true } } },
+        orderBy: { fecha_acceso: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ])
+
+    return { data, total, page, limit }
   }
 
   private async verificarAccesoHerramienta(

@@ -10,6 +10,7 @@ import NivelesPage from '../pages/admin/NivelesPage'
 import HerramientasPage from '../pages/admin/HerramientasPage'
 import PermisosPage from '../pages/admin/PermisosPage'
 import HistorialPage from '../pages/admin/HistorialPage'
+import MiHistorialPage from '../pages/MiHistorialPage'
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth()
@@ -33,6 +34,7 @@ export default function AppRouter() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/configuracion" element={<ConfiguracionPage />} />
+          <Route path="/historial" element={<MiHistorialPage />} />
           <Route path="/nivel/:id" element={<NivelPage />} />
           <Route
             path="/admin/usuarios"

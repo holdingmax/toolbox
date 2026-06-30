@@ -16,6 +16,22 @@ export class AccesosController {
     return this.accesosService.getHistorialReciente(user.sub, limit ? +limit : 4)
   }
 
+  @Get('mi-historial')
+  getMiHistorial(
+    @CurrentUser() user: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('desde') desde?: string,
+    @Query('hasta') hasta?: string,
+  ) {
+    return this.accesosService.getMiHistorialCompleto(user.sub, {
+      page: page ? +page : 1,
+      limit: limit ? +limit : 20,
+      desde,
+      hasta,
+    })
+  }
+
   @Get('herramientas')
   getHerramientas(@CurrentUser() user: any) {
     return this.accesosService.getHerramientasDisponibles(user.sub)

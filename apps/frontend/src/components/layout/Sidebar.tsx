@@ -65,14 +65,10 @@ export default function Sidebar() {
           <span>Inicio</span>
         </NavLink>
 
-        {isAdmin ? (
-          <NavLink to="/admin/historial" className={linkClass}>
-            <span>📋</span>
-            <span>Historial</span>
-          </NavLink>
-        ) : (
-          disabledItem('📋', 'Historial')
-        )}
+        <NavLink to={isAdmin ? '/admin/historial' : '/historial'} className={linkClass}>
+          <span>📋</span>
+          <span>Historial</span>
+        </NavLink>
         <NavLink to="/configuracion" className={linkClass}>
           <span>⚙️</span>
           <span>Configuración</span>

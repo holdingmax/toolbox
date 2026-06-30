@@ -27,3 +27,28 @@ export const changePassword = (contraseña_actual: string, nueva_contraseña: st
   client
     .patch<{ ok: boolean }>('/api/auth/password', { contraseña_actual, nueva_contraseña })
     .then((r) => r.data)
+
+export interface MiHistorialItem {
+  id: string
+  herramienta_id: string
+  fecha_acceso: string
+  ip: string | null
+  herramienta: { id: string; nombre: string }
+}
+
+export interface MiHistorialResponse {
+  data: MiHistorialItem[]
+  total: number
+  page: number
+  limit: number
+}
+
+export const getMiHistorial = (params: {
+  page?: number
+  limit?: number
+  desde?: string
+  hasta?: string
+}) =>
+  client
+    .get<MiHistorialResponse>('/api/accesos/mi-historial', { params })
+    .then((r) => r.data)
