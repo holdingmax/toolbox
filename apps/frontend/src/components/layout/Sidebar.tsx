@@ -28,21 +28,6 @@ export default function Sidebar() {
         : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
     }`
 
-  const disabledItem = (icon: string, label: string) => (
-    <div
-      key={label}
-      className="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-text-secondary/40 cursor-not-allowed"
-    >
-      <span className="flex items-center gap-3">
-        <span>{icon}</span>
-        <span>{label}</span>
-      </span>
-      <span className="text-xs px-1.5 py-0.5 rounded bg-white/5 text-text-secondary/50">
-        Pronto
-      </span>
-    </div>
-  )
-
   return (
     <aside className="w-60 min-h-screen bg-bg-sidebar flex flex-col border-r border-border-card flex-shrink-0">
       {/* Logo */}

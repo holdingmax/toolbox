@@ -1,19 +1,27 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
 import { getMiHistorial } from '../api/auth.api'
+import type { MiHistorialItem } from '../api/auth.api'
 
 export default function MiHistorialPage() {
+  const [data, setData] = useState<MiHistorialItem[]>([])
+  const [total, setTotal] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [desde, setDesde] = useState('')
   const [hasta, setHasta] = useState('')
   const limit = 20
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['mi-historial', page, desde, hasta],
-    queryFn: () => getMiHistorial({ page, limit, desde: desde || undefined, hasta: hasta || undefined }),
-  })
+  useEffect(() => {
+    setIsLoading(true)
+    getMiHistorial({ page, limit, desde: desde || undefined, hasta: hasta || undefined })
+      .then((res) => {
+        setData(res.data)
+        setTotal(res.total)
+      })
+      .finally(() => setIsLoading(false))
+  }, [page, desde, hasta])
 
-  const totalPages = data ? Math.ceil(data.total / limit) : 1
+  const totalPages = Math.ceil(total / limit) || 1
 
   const inputClass =
     'bg-bg-card border border-border-card rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent'
@@ -70,14 +78,14 @@ export default function MiHistorialPage() {
                 </td>
               </tr>
             )}
-            {!isLoading && data?.data.length === 0 && (
+            {!isLoading && data.length === 0 && (
               <tr>
                 <td colSpan={3} className="px-4 py-8 text-center text-text-secondary">
                   Sin registros
                 </td>
               </tr>
             )}
-            {data?.data.map((item) => (
+            {data.map((item: MiHistorialItem) => (
               <tr key={item.id} className="border-b border-border-card/50 hover:bg-white/2 transition-colors">
                 <td className="px-4 py-3 text-text-secondary">
                   {new Date(item.fecha_acceso).toLocaleString('es-AR')}
@@ -98,7 +106,7 @@ export default function MiHistorialPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-text-secondary">
-            {data?.total ?? 0} registros · página {page} de {totalPages}
+            {total} registros · página {page} de {totalPages}
           </p>
           <div className="flex gap-2">
             <button
