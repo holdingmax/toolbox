@@ -99,12 +99,13 @@ export default function DashboardPage() {
 
         {/* Contador de herramientas */}
         {!loadingAccesos && disponibles && disponibles.total > 0 && (
-          <div className="flex items-center gap-2 bg-accent/10 border border-accent/25 rounded-lg px-3.5 py-2 flex-shrink-0">
+          <div className="flex items-center gap-1.5 bg-accent/10 border border-accent/25 rounded-lg px-3.5 py-2 flex-shrink-0">
+            <span className="text-text-secondary text-xs leading-none">acceso a</span>
             <span className="text-accent text-base font-bold leading-none">
               {disponibles.total}
             </span>
-            <span className="text-text-secondary text-xs leading-tight">
-              herramienta{disponibles.total !== 1 ? 's' : ''}<br />disponible{disponibles.total !== 1 ? 's' : ''}
+            <span className="text-text-secondary text-xs leading-none">
+              herramienta{disponibles.total !== 1 ? 's' : ''}
             </span>
           </div>
         )}
