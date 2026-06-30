@@ -1,5 +1,7 @@
+import { join } from 'path'
 import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
+import { ServeStaticModule } from '@nestjs/serve-static'
 import { AccesosModule } from './accesos/accesos.module'
 import { HerramientasAdminModule } from './admin/herramientas/herramientas-admin.module'
 import { HistorialAdminModule } from './admin/historial/historial-admin.module'
@@ -17,6 +19,11 @@ import { PrismaModule } from './prisma/prisma.module'
 
 @Module({
   imports: [
+    // Sirve el build de React para todas las rutas que no sean /api/*
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
+      exclude: ['/api/(.*)'],
+    }),
     PrismaModule,
     AuthModule,
     NavegacionModule,
