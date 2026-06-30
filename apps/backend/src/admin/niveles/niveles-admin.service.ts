@@ -40,6 +40,7 @@ export class NivelesAdminService {
           ruta: `__temp_${Date.now()}/`,
           orden: dto.orden ?? 0,
           icono_url: dto.icono_url ?? null,
+          color_fondo: dto.color_fondo ?? null,
         },
       })
 
@@ -61,6 +62,7 @@ export class NivelesAdminService {
       if (dto.descripcion !== undefined) data.descripcion = dto.descripcion
       if (dto.orden !== undefined) data.orden = dto.orden
       if (dto.icono_url !== undefined) data.icono_url = dto.icono_url
+      if (dto.color_fondo !== undefined) data.color_fondo = dto.color_fondo
       if (dto.activo !== undefined) data.activo = dto.activo
 
       if (dto.parent_id !== undefined) {

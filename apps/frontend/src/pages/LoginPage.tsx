@@ -2,16 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { login as loginApi } from '../api/auth.api'
-
-function CubeIcon({ className = 'w-12 h-12' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path d="M32 8L54 20L32 32L10 20Z" fill="rgba(124,58,237,0.45)" stroke="#7c3aed" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M10 20L32 32L32 52L10 40Z" fill="rgba(109,40,217,0.28)" stroke="#6d28d9" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M54 20L32 32L32 52L54 40Z" fill="rgba(124,58,237,0.2)" stroke="#7c3aed" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  )
-}
+import CubeIcon from '../components/CubeIcon'
 
 function EyeIcon() {
   return (
@@ -63,7 +54,6 @@ export default function LoginPage() {
     }
   }
 
-  // inputs más oscuros que la card (#2a1f45) para crear capas de profundidad
   const inputClass =
     'w-full bg-[#160e28] border border-[rgba(124,58,237,0.25)] rounded-lg px-4 py-2.5 text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-accent transition-colors text-sm'
 
@@ -73,16 +63,10 @@ export default function LoginPage() {
       {/* ── Panel izquierdo — branding ─────────────────────────────────── */}
       <div className="hidden lg:flex lg:w-[52%] xl:w-1/2 relative overflow-hidden">
 
-        {/* Fondo negro puro */}
         <div className="absolute inset-0 bg-[#0a0a0f]" />
-
-        {/* Resplandor púrpura sutil solo en el centro — donde está el logo */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-violet-600/20 blur-[140px] pointer-events-none" />
-
-        {/* Fusión suave hacia el panel derecho */}
         <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-r from-transparent to-[#1e1530] z-20 pointer-events-none" />
 
-        {/* Grilla sutil */}
         <div
           className="absolute inset-0 opacity-[0.035] pointer-events-none"
           style={{
@@ -92,46 +76,31 @@ export default function LoginPage() {
           }}
         />
 
-        {/* Ondas — solo esquina inferior izquierda, muy sutiles */}
         <svg
           className="absolute bottom-0 left-0 w-[58%] pointer-events-none"
           viewBox="0 0 520 180"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            d="M0,90 C70,45 180,130 300,85 C400,50 480,100 520,70 L520,180 L0,180 Z"
-            fill="rgba(124,58,237,0.10)"
-          />
-          <path
-            d="M0,130 C90,100 200,155 340,125 C440,103 500,135 520,118 L520,180 L0,180 Z"
-            fill="rgba(109,40,217,0.07)"
-          />
-          <path
-            d="M0,160 C110,148 240,168 380,158 L380,180 L0,180 Z"
-            fill="rgba(124,58,237,0.04)"
-          />
+          <path d="M0,90 C70,45 180,130 300,85 C400,50 480,100 520,70 L520,180 L0,180 Z" fill="rgba(124,58,237,0.10)" />
+          <path d="M0,130 C90,100 200,155 340,125 C440,103 500,135 520,118 L520,180 L0,180 Z" fill="rgba(109,40,217,0.07)" />
+          <path d="M0,160 C110,148 240,168 380,158 L380,180 L0,180 Z" fill="rgba(124,58,237,0.04)" />
         </svg>
 
-        {/* Contenido — centrado verticalmente */}
         <div className="relative z-10 flex flex-col w-full">
-
-          {/* Bloque central: logo + tagline + features */}
           <div className="flex-1 flex flex-col items-center justify-center px-12 py-16 text-center">
 
-            {/* Cubo grande + nombre */}
+            {/* Cubo + nombre */}
             <div className="flex items-center gap-5 mb-7">
-              <CubeIcon className="w-16 h-16" />
+              <CubeIcon className="w-24 h-24" />
               <span className="text-[2.8rem] font-bold text-white tracking-[0.18em] leading-none">
                 TOOLBOX
               </span>
             </div>
 
-            {/* Tagline */}
             <p className="text-purple-300/70 text-[1.05rem] font-light leading-relaxed max-w-[18rem] mb-12">
               Portal central de herramientas corporativas
             </p>
 
-            {/* Features */}
             <div className="space-y-4 text-left w-full max-w-[22rem]">
               {FEATURES.map((item) => (
                 <div key={item.text} className="flex items-center gap-3">
@@ -144,7 +113,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Footer del panel izquierdo */}
           <div className="px-12 py-6 border-t border-white/[0.06]">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded bg-accent/30 flex items-center justify-center flex-shrink-0">
@@ -161,7 +129,7 @@ export default function LoginPage() {
         <div className="flex-1 flex items-center justify-center px-8">
           <div className="w-full max-w-[390px]">
 
-            {/* Logo para móvil */}
+            {/* Logo móvil */}
             <div className="lg:hidden flex items-center justify-center gap-3 mb-10">
               <CubeIcon className="w-10 h-10" />
               <div>
@@ -170,7 +138,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Card del formulario */}
             <div
               className="bg-[#2a1f45] rounded-2xl p-8"
               style={{
@@ -178,8 +145,6 @@ export default function LoginPage() {
                 boxShadow: '0 0 40px rgba(124,58,237,0.3), 0 20px 60px rgba(0,0,0,0.5)',
               }}
             >
-
-              {/* Encabezado */}
               <div className="mb-7">
                 <h2 className="text-text-primary text-2xl font-bold mb-1">Bienvenido</h2>
                 <p className="text-text-secondary text-sm">
@@ -189,11 +154,8 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className="space-y-5">
 
-                {/* Email */}
                 <div>
-                  <label className="block text-text-secondary text-sm font-medium mb-1.5">
-                    Email
-                  </label>
+                  <label className="block text-text-secondary text-sm font-medium mb-1.5">Email</label>
                   <input
                     type="email"
                     value={email}
@@ -205,11 +167,8 @@ export default function LoginPage() {
                   />
                 </div>
 
-                {/* Contraseña */}
                 <div>
-                  <label className="block text-text-secondary text-sm font-medium mb-1.5">
-                    Contraseña
-                  </label>
+                  <label className="block text-text-secondary text-sm font-medium mb-1.5">Contraseña</label>
                   <div className="relative">
                     <input
                       type={showPass ? 'text' : 'password'}
@@ -231,7 +190,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Recordarme + ¿Olvidaste tu contraseña? */}
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer select-none">
                     <input
@@ -250,14 +208,12 @@ export default function LoginPage() {
                   </button>
                 </div>
 
-                {/* Error */}
                 {error && (
                   <div className="text-status-inactive text-sm bg-status-inactive/10 border border-status-inactive/30 rounded-lg px-3 py-2.5">
                     {error}
                   </div>
                 )}
 
-                {/* Botón — gradiente púrpura → violeta */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -277,7 +233,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="px-8 py-4 border-t border-white/[0.07]">
           <p className="text-white/20 text-xs text-center">HoldingMax © 2026</p>
         </div>

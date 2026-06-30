@@ -45,6 +45,7 @@ model Nivel {
   ruta           String   @unique
   orden          Int      @default(0)
   icono_url      String?
+  color_fondo    String?
   activo         Boolean  @default(true)
   creado_en      DateTime @default(now())
   actualizado_en DateTime @updatedAt

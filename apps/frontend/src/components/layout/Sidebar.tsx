@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import CubeIcon from '../CubeIcon'
 
 function getInitials(nombre: string): string {
   return nombre
@@ -45,9 +46,16 @@ export default function Sidebar() {
   return (
     <aside className="w-60 min-h-screen bg-bg-sidebar flex flex-col border-r border-border-card flex-shrink-0">
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-border-card">
-        <span className="text-text-primary font-bold text-xl tracking-wide">TOOLBOX</span>
-        <p className="text-text-secondary text-xs mt-0.5">HoldingMax</p>
+      <div className="px-4 py-5 border-b border-border-card">
+        <div className="flex items-center gap-4">
+          <CubeIcon className="w-16 h-16 flex-shrink-0" />
+          <div className="min-w-0">
+            <p className="text-text-primary font-bold text-xl tracking-[0.18em] leading-none">
+              TOOLBOX
+            </p>
+            <p className="text-text-secondary text-[13px] mt-1.5">HoldingMax</p>
+          </div>
+        </div>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1">

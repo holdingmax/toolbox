@@ -23,4 +23,8 @@ export class CreateNivelDto {
   @IsString()
   @IsOptional()
   icono_url?: string
+
+  @IsString()
+  @IsOptional()
+  color_fondo?: string
 }

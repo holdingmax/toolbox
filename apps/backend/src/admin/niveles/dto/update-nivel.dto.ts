@@ -25,6 +25,10 @@ export class UpdateNivelDto {
   @IsOptional()
   icono_url?: string
 
+  @IsString()
+  @IsOptional()
+  color_fondo?: string
+
   @IsBoolean()
   @IsOptional()
   activo?: boolean

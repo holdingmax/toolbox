@@ -144,6 +144,7 @@ export class NavegacionService {
       descripcion: n.descripcion,
       tipo: n.tipo,
       icono_url: n.icono_url,
+      color_fondo: n.color_fondo,
       orden: n.orden,
       parent_id: n.parent_id,
       ruta: n.ruta,

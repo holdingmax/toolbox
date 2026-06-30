@@ -26,9 +26,9 @@ export default function NivelPage() {
       <div className="max-w-4xl mx-auto animate-pulse space-y-4">
         <div className="h-4 bg-white/10 rounded w-40" />
         <div className="h-8 bg-white/10 rounded w-64" />
-        <div className="grid gap-3 mt-6">
+        <div className="flex flex-col gap-2 mt-6">
           {[1, 2].map((i) => (
-            <div key={i} className="h-20 bg-bg-card border border-border-card rounded-xl" />
+            <div key={i} className="h-16 bg-bg-card border border-border-card rounded-xl" />
           ))}
         </div>
       </div>
@@ -100,11 +100,11 @@ export default function NivelPage() {
           <h2 className="text-text-secondary text-sm font-medium uppercase tracking-wider mb-4">
             Áreas
           </h2>
-          <div className="grid gap-3">
+          <div className="flex flex-col gap-2">
             {hijos
               .sort((a, b) => a.orden - b.orden)
               .map((hijo) => (
-                <NivelCard key={hijo.id} nivel={hijo} />
+                <NivelCard key={hijo.id} nivel={hijo} variant="area" />
               ))}
           </div>
         </section>

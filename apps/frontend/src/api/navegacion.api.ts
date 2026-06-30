@@ -6,6 +6,7 @@ export interface NivelResumen {
   descripcion: string | null
   tipo: string
   icono_url: string | null
+  color_fondo: string | null
   orden: number
   tiene_hijos: boolean
 }

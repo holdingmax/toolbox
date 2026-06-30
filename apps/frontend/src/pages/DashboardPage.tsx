@@ -31,46 +31,14 @@ function toolColor(id: string): string {
   return TOOL_COLORS[sum % TOOL_COLORS.length]
 }
 
-type ToolInfo = HerramientasDisponibles['herramientas'][number]
-
-function ToolAvatar({ tool }: { tool: ToolInfo | AccesoReciente['herramienta'] }) {
-  return (
-    <div
-      className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 select-none"
-      style={{ background: toolColor(tool.id) }}
-    >
-      {tool.icono_url ? (
-        <img src={tool.icono_url} alt="" className="w-6 h-6 object-contain" />
-      ) : (
-        tool.nombre[0].toUpperCase()
-      )}
-    </div>
-  )
-}
-
 function SkeletonLevelCard() {
   return (
-    <div className="bg-bg-card border border-border-card rounded-xl p-5 flex items-center gap-5 animate-pulse">
-      <div className="w-14 h-14 rounded-xl bg-white/10 flex-shrink-0" />
-      <div className="flex-1 space-y-2.5">
-        <div className="h-5 bg-white/10 rounded w-2/5" />
-        <div className="h-4 bg-white/10 rounded w-1/3" />
+    <div className="relative bg-bg-card border border-border-card rounded-2xl min-h-[200px] overflow-hidden animate-pulse">
+      <div className="absolute inset-0 bg-white/5" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
+        <div className="h-4 bg-white/10 rounded-full w-1/4" />
+        <div className="h-5 bg-white/10 rounded w-3/5" />
       </div>
-    </div>
-  )
-}
-
-function SkeletonToolCard() {
-  return (
-    <div className="bg-bg-card border border-border-card rounded-xl p-4 animate-pulse">
-      <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-white/10 flex-shrink-0" />
-        <div className="flex-1 space-y-2 min-w-0 pt-0.5">
-          <div className="h-4 bg-white/10 rounded w-3/4" />
-          <div className="h-3 bg-white/10 rounded w-1/2" />
-        </div>
-      </div>
-      <div className="h-7 bg-white/10 rounded-lg w-full" />
     </div>
   )
 }
@@ -95,7 +63,7 @@ export default function DashboardPage() {
       .catch(() => setError('No se pudo cargar la navegación.'))
       .finally(() => setLoadingNiveles(false))
 
-    Promise.all([getAccesosRecientes(4), getHerramientasDisponibles()])
+    Promise.all([getAccesosRecientes(3), getHerramientasDisponibles()])
       .then(([r, d]) => {
         setRecientes(r)
         setDisponibles(d)
@@ -117,16 +85,8 @@ export default function DashboardPage() {
     }
   }
 
-  // Quick access: historial reciente si hay, sino primeras 4 herramientas disponibles
-  const quickTools: (ToolInfo | AccesoReciente['herramienta'])[] =
-    recientes.length > 0
-      ? recientes.map((a) => a.herramienta)
-      : (disponibles?.herramientas.slice(0, 4) ?? [])
-
-  const quickLabel = recientes.length > 0 ? 'Accesos recientes' : 'Accesos rápidos'
-
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto flex flex-col min-h-full">
 
       {/* ── Saludo ─────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between mb-8 gap-4">
@@ -157,13 +117,13 @@ export default function DashboardPage() {
       )}
 
       {/* ── Accesos disponibles (niveles raíz) ─────────────────────── */}
-      <section className="mb-8">
+      <section className="flex-1 mb-8">
         <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
           Accesos disponibles
         </h2>
 
         {loadingNiveles ? (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => <SkeletonLevelCard key={i} />)}
           </div>
         ) : niveles.length === 0 ? (
@@ -175,7 +135,7 @@ export default function DashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...niveles]
               .sort((a, b) => a.orden - b.orden)
               .map((nivel) => (
@@ -185,53 +145,38 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* ── Accesos rápidos / recientes ─────────────────────────────── */}
-      {(loadingAccesos || quickTools.length > 0) && (
-        <section>
-          <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
-            {quickLabel}
-          </h2>
-
-          {loadingAccesos ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {[1, 2, 3, 4].map((i) => <SkeletonToolCard key={i} />)}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {quickTools.map((tool) => (
-                <div
-                  key={tool.id}
-                  className="bg-bg-card border border-border-card rounded-xl p-4 flex flex-col gap-3
-                             transition-all duration-200 hover:border-accent hover:-translate-y-0.5
-                             hover:shadow-[0_8px_20px_rgba(124,58,237,0.2)]"
-                >
-                  <div className="flex items-start gap-3">
-                    <ToolAvatar tool={tool} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary text-sm font-semibold leading-snug truncate">
-                        {tool.nombre}
-                      </p>
-                      {tool.descripcion && (
-                        <p className="text-text-secondary text-xs mt-0.5 line-clamp-2 leading-relaxed">
-                          {tool.descripcion}
-                        </p>
-                      )}
-                    </div>
+      {/* ── Recientes — lista discreta al pie ──────────────────────── */}
+      {!loadingAccesos && recientes.length > 0 && (
+        <div className="mt-12 pt-6 border-t border-white/[0.06]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-secondary/30 mb-3">
+            Accesos recientes
+          </p>
+          <div className="flex flex-col gap-0.5">
+            {recientes.slice(0, 3).map((acceso) => {
+              const tool = acceso.herramienta
+              return (
+                <div key={tool.id} className="flex items-center justify-between py-1.5 group">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0 opacity-50"
+                      style={{ background: toolColor(tool.id) }}
+                    />
+                    <span className="text-[13px] text-text-secondary/55 truncate leading-none">
+                      {tool.nombre}
+                    </span>
                   </div>
                   <button
                     onClick={() => handleAbrir(tool.id)}
                     disabled={openingId === tool.id}
-                    className="w-full text-center text-xs text-accent border border-accent/30
-                               rounded-lg py-1.5 hover:bg-accent/10 transition-colors
-                               disabled:opacity-50 font-medium"
+                    className="text-[11px] text-text-secondary/25 hover:text-accent transition-colors disabled:opacity-40 font-medium flex-shrink-0 ml-4"
                   >
                     {openingId === tool.id ? '…' : 'Abrir →'}
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
+              )
+            })}
+          </div>
+        </div>
       )}
 
     </div>
