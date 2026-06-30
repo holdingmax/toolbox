@@ -11,8 +11,8 @@ services:
     region: oregon
     plan: free
     buildCommand: >-
-      cd apps/frontend && npm install && npm run build &&
-      cd ../backend && npm install &&
+      cd apps/frontend && npm install --include=dev && npm run build &&
+      cd ../backend && npm install --include=dev &&
       npx prisma generate &&
       npx prisma db push &&
       npm run build
