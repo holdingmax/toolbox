@@ -22,7 +22,7 @@ import { PrismaModule } from './prisma/prisma.module'
     // Sirve el build de React para todas las rutas que no sean /api/*
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
-      exclude: ['/api/(.*)'],
+      exclude: ['/api/{*path}'],
     }),
     PrismaModule,
     AuthModule,
