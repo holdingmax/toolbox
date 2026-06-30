@@ -25,15 +25,17 @@ async function main() {
   })
   console.log(`Rol: ${rolAdmin.nombre}`)
 
-  const existingOperador = await prisma.rol.findFirst({ where: { nombre: 'Operador' } })
-  if (!existingOperador) {
-    await prisma.rol.create({
-      data: { nombre: 'Operador', descripcion: 'Acceso operativo sin administración', activo: true },
-    })
-    console.log('Rol: Operador (creado)')
-  } else {
-    console.log('Rol: Operador (ya existe)')
-  }
+  const rolOperador = await prisma.rol.upsert({
+    where: { id: 'cmoperador000f4qi0000op001' },
+    update: {},
+    create: {
+      id: 'cmoperador000f4qi0000op001',
+      nombre: 'Operador',
+      descripcion: 'Acceso operativo sin administración',
+      activo: true,
+    },
+  })
+  console.log(`Rol: ${rolOperador.nombre}`)
 
   // ── Usuarios ───────────────────────────────────────────────────────────────
   const adminHash = await bcrypt.hash('Admin2026!', 10)
