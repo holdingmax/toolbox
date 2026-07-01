@@ -105,7 +105,7 @@ async function main() {
       orden: 3,
       icono_url: null,
       color_fondo: '#2a2a3a',
-      activo: true,
+      activo: false,
     },
     {
       id: 'cmqzyf93k0000jsqihu6lqfj6',
@@ -117,7 +117,7 @@ async function main() {
       orden: 4,
       icono_url: null,
       color_fondo: '#3a3a4a',
-      activo: true,
+      activo: false,
     },
     // Hijos — después de los raíz
     {

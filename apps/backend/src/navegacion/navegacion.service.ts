@@ -60,6 +60,7 @@ export class NavegacionService {
         descripcion: hn.herramienta.descripcion,
         url: hn.herramienta.url,
         icono_url: hn.herramienta.icono_url,
+        soporte: hn.herramienta.soporte,
         orden: hn.herramienta.orden,
       }))
 

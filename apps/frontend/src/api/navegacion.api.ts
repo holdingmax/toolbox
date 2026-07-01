@@ -17,6 +17,7 @@ export interface HerramientaResumen {
   descripcion: string | null
   url: string
   icono_url: string | null
+  soporte: string | null
   orden: number
 }
 
