@@ -149,7 +149,7 @@ export default function DashboardPage() {
       {/* ── Recientes — lista discreta al pie ──────────────────────── */}
       {!loadingAccesos && recientes.length > 0 && (
         <div className="mt-12 pt-6 border-t border-white/[0.06]">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-secondary/30 mb-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-secondary/85 mb-3">
             Accesos recientes
           </p>
           <div className="flex flex-col gap-0.5">
@@ -162,14 +162,14 @@ export default function DashboardPage() {
                       className="w-1.5 h-1.5 rounded-full flex-shrink-0 opacity-50"
                       style={{ background: toolColor(tool.id) }}
                     />
-                    <span className="text-[13px] text-text-secondary/55 truncate leading-none">
+                    <span className="text-[13px] text-text-secondary/85 truncate leading-none">
                       {tool.nombre}
                     </span>
                   </div>
                   <button
                     onClick={() => handleAbrir(tool.id)}
                     disabled={openingId === tool.id}
-                    className="text-[11px] text-text-secondary/25 hover:text-accent transition-colors disabled:opacity-40 font-medium flex-shrink-0 ml-4"
+                    className="text-[11px] text-accent hover:text-accent-hover hover:underline transition-colors disabled:opacity-40 font-semibold flex-shrink-0 ml-4"
                   >
                     {openingId === tool.id ? '…' : 'Abrir →'}
                   </button>

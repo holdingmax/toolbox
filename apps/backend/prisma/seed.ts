@@ -119,6 +119,18 @@ async function main() {
       color_fondo: '#3a3a4a',
       activo: false,
     },
+    {
+      id: 'cmadmincentral001f4qi001',
+      nombre: 'Administración Central',
+      descripcion: null,
+      parent_id: null,
+      tipo: 'empresa',
+      ruta: '/cmadmincentral001f4qi001/',
+      orden: 5,
+      icono_url: null,
+      color_fondo: null,
+      activo: true,
+    },
     // Hijos — después de los raíz
     {
       id: 'cmqzfghql00029kqioihk2cwb',
@@ -148,9 +160,9 @@ async function main() {
       id: 'cmqzyf9410001jsqiak7yr5s4',
       nombre: 'Inversiones',
       descripcion: null,
-      parent_id: 'cmqzyf93k0000jsqihu6lqfj6',
+      parent_id: 'cmadmincentral001f4qi001',
       tipo: 'area',
-      ruta: '/cmqzyf93k0000jsqihu6lqfj6/cmqzyf9410001jsqiak7yr5s4/',
+      ruta: '/cmadmincentral001f4qi001/cmqzyf9410001jsqiak7yr5s4/',
       orden: 1,
       icono_url: null,
       color_fondo: null,
@@ -199,6 +211,16 @@ async function main() {
       orden: 1,
       activo: true,
     },
+    {
+      id: 'cminvinmob0001f4qi9001',
+      nombre: 'Inversiones Inmobiliarias',
+      descripcion: 'Gestión de inversiones inmobiliarias',
+      url: 'https://inversiones-inmobiliarias.onrender.com',
+      icono_url: null,
+      soporte: 'Federico Vigo',
+      orden: 3,
+      activo: true,
+    },
   ]
 
   for (const h of herramientas) {
@@ -226,6 +248,8 @@ async function main() {
     { id: 'cmqzx4vsm0000h4qiicdczsll', herramienta_id: 'cmqzfghra00049kqi6vp567vo', nivel_id: 'cmqzudwja00005sqi10bwnlja', activo: true },
     // Reporte de Inversiones → Inversiones (activo)
     { id: 'cmqzyf94x0002jsqiwrnqtsav', herramienta_id: 'cmqzfghra00049kqi6vp567vo', nivel_id: 'cmqzyf9410001jsqiak7yr5s4', activo: true },
+    // Inversiones Inmobiliarias → Administración Central (activo)
+    { id: 'cmpubinvinmob01f4qi001', herramienta_id: 'cminvinmob0001f4qi9001', nivel_id: 'cmadmincentral001f4qi001', activo: true },
   ]
 
   for (const p of publicaciones) {
@@ -247,6 +271,8 @@ async function main() {
     { id: 'cmqzxvxeh000114qi1vfomu0i', usuario_id: 'cmqzf83wi0001f4qi943je1ut', nivel_id: 'cmqzxvxd9000014qig22mrqfg', activo: true },
     // Admin TOOLBOX → Empresa Pendiente
     { id: 'cmqzyf9570003jsqindiaumtv', usuario_id: 'cmqzf83wi0001f4qi943je1ut', nivel_id: 'cmqzyf93k0000jsqihu6lqfj6', activo: true },
+    // Admin TOOLBOX → Administración Central
+    { id: 'cmpermadmcentral1f4qi01', usuario_id: 'cmqzf83wi0001f4qi943je1ut', nivel_id: 'cmadmincentral001f4qi001', activo: true },
   ]
 
   for (const perm of permisos) {

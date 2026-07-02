@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import type { HerramientaResumen } from '../api/navegacion.api'
 import { registrarAcceso } from '../api/navegacion.api'
+import { getPaletteColor } from '../utils/colorPalette'
 
 interface Props {
   herramienta: HerramientaResumen
 }
-
-const INITIALS_COLORS = [
-  '#7c3aed', '#2563eb', '#059669',
-  '#dc2626', '#d97706', '#0891b2', '#db2777',
-]
 
 function getInitials(nombre: string): string {
   const palabras = nombre.trim().split(/\s+/).filter(Boolean)
@@ -18,13 +14,9 @@ function getInitials(nombre: string): string {
   return (palabras[0][0] + palabras[1][0]).toUpperCase()
 }
 
-function getInitialsColor(id: string): string {
-  const sum = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
-  return INITIALS_COLORS[sum % INITIALS_COLORS.length]
-}
-
 export default function HerramientaCard({ herramienta }: Props) {
   const [loading, setLoading] = useState(false)
+  const palette = getPaletteColor(herramienta.nombre)
 
   const handleAbrir = async () => {
     if (loading) return
@@ -40,14 +32,14 @@ export default function HerramientaCard({ herramienta }: Props) {
   }
 
   return (
-    <div className="bg-bg-card border border-border-card rounded-xl p-5 flex items-start gap-4 hover:border-accent/50 transition-colors duration-200">
+    <div className="bg-bg-card border border-border-card rounded-xl p-5 flex items-start gap-4 cursor-pointer transition-all duration-200 hover:border-accent/50 hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(124,58,237,0.25)]">
       <div className="flex-shrink-0 mt-0.5">
         {herramienta.icono_url ? (
           <img src={herramienta.icono_url} alt="" className="w-10 h-10 object-contain rounded" />
         ) : (
           <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-xs font-semibold"
-            style={{ background: getInitialsColor(herramienta.id) }}
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-xs font-semibold"
+            style={{ background: palette.bg, color: palette.text }}
           >
             {getInitials(herramienta.nombre)}
           </div>
@@ -61,7 +53,7 @@ export default function HerramientaCard({ herramienta }: Props) {
           </p>
         )}
         {herramienta.soporte && (
-          <p className="text-text-secondary/60 text-xs mb-3">Soporte: {herramienta.soporte}</p>
+          <p className="text-text-secondary/85 text-xs mb-3">Soporte: {herramienta.soporte}</p>
         )}
         <button
           onClick={handleAbrir}
