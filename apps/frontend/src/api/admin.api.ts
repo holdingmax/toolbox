@@ -233,6 +233,7 @@ export const getHistorial = (params: {
   limit?: number
   usuario_id?: string
   herramienta_id?: string
+  nivel_id?: string
   desde?: string
   hasta?: string
 }) => client.get<HistorialPagedResponse>('/api/admin/historial', { params }).then((r) => r.data)

@@ -23,13 +23,14 @@ export class HistorialAdminController {
     @Query('limit') limit?: string,
     @Query('usuario_id') usuario_id?: string,
     @Query('herramienta_id') herramienta_id?: string,
+    @Query('nivel_id') nivel_id?: string,
     @Query('desde') desde?: string,
     @Query('hasta') hasta?: string,
   ) {
     return this.service.findAll(
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 20,
-      { usuario_id, herramienta_id, desde, hasta },
+      { usuario_id, herramienta_id, nivel_id, desde, hasta },
     )
   }
 }

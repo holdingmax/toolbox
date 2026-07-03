@@ -3,7 +3,9 @@ import {
   getHistorial,
   getHistorialUsuarios,
   getHistorialHerramientas,
+  getNiveles,
   type HistorialItem,
+  type NivelAdmin,
 } from '../../api/admin.api'
 
 function TableSkeleton() {
@@ -32,30 +34,34 @@ export default function HistorialPage() {
   // Filtros aplicados
   const [usuarioId, setUsuarioId] = useState('')
   const [herramientaId, setHerramientaId] = useState('')
+  const [nivelId, setNivelId] = useState('')
   const [desde, setDesde] = useState('')
   const [hasta, setHasta] = useState('')
 
   // Filtros del form (pendientes de aplicar)
   const [fUsuarioId, setFUsuarioId] = useState('')
   const [fHerramientaId, setFHerramientaId] = useState('')
+  const [fNivelId, setFNivelId] = useState('')
   const [fDesde, setFDesde] = useState('')
   const [fHasta, setFHasta] = useState('')
 
   const [listaUsuarios, setListaUsuarios] = useState<{ id: string; nombre: string }[]>([])
   const [listaHerramientas, setListaHerramientas] = useState<{ id: string; nombre: string }[]>([])
+  const [listaNiveles, setListaNiveles] = useState<NivelAdmin[]>([])
 
   const totalPages = Math.max(1, Math.ceil(total / limit))
 
   useEffect(() => {
-    Promise.all([getHistorialUsuarios(), getHistorialHerramientas()]).then(([u, h]) => {
+    Promise.all([getHistorialUsuarios(), getHistorialHerramientas(), getNiveles()]).then(([u, h, n]) => {
       setListaUsuarios(u)
       setListaHerramientas(h)
+      setListaNiveles(n.filter((nivel) => nivel.activo).sort((a, b) => a.ruta.localeCompare(b.ruta)))
     })
   }, [])
 
   useEffect(() => {
     fetchHistorial()
-  }, [page, usuarioId, herramientaId, desde, hasta])
+  }, [page, usuarioId, herramientaId, nivelId, desde, hasta])
 
   const fetchHistorial = async () => {
     setLoading(true)
@@ -65,6 +71,7 @@ export default function HistorialPage() {
         limit,
         usuario_id: usuarioId || undefined,
         herramienta_id: herramientaId || undefined,
+        nivel_id: nivelId || undefined,
         desde: desde || undefined,
         hasta: hasta || undefined,
       })
@@ -82,6 +89,7 @@ export default function HistorialPage() {
     setPage(1)
     setUsuarioId(fUsuarioId)
     setHerramientaId(fHerramientaId)
+    setNivelId(fNivelId)
     setDesde(fDesde)
     setHasta(fHasta)
   }
@@ -89,11 +97,13 @@ export default function HistorialPage() {
   const handleLimpiar = () => {
     setFUsuarioId('')
     setFHerramientaId('')
+    setFNivelId('')
     setFDesde('')
     setFHasta('')
     setPage(1)
     setUsuarioId('')
     setHerramientaId('')
+    setNivelId('')
     setDesde('')
     setHasta('')
   }
@@ -103,7 +113,7 @@ export default function HistorialPage() {
   const inputClass =
     'bg-white/5 border border-border-card text-text-primary rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent'
 
-  const hasFilters = usuarioId || herramientaId || desde || hasta
+  const hasFilters = usuarioId || herramientaId || nivelId || desde || hasta
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -148,6 +158,22 @@ export default function HistorialPage() {
             {listaHerramientas.map((h) => (
               <option key={h.id} value={h.id} className="bg-bg-card">
                 {h.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-text-secondary text-xs">Nivel</label>
+          <select
+            value={fNivelId}
+            onChange={(e) => setFNivelId(e.target.value)}
+            className={selectClass}
+          >
+            <option value="" className="bg-bg-card">Todos</option>
+            {listaNiveles.map((n) => (
+              <option key={n.id} value={n.id} className="bg-bg-card">
+                {'—'.repeat(Math.max(0, n.ruta.split('/').filter(Boolean).length - 1))} {n.nombre}
               </option>
             ))}
           </select>
