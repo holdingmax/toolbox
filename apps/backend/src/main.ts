@@ -4,6 +4,14 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
+  const jwtSecret = process.env.JWT_SECRET
+  if (!jwtSecret || jwtSecret.length < 32) {
+    console.error(
+      'JWT_SECRET no está configurado o es demasiado corto — el servidor no puede arrancar de forma segura',
+    )
+    process.exit(1)
+  }
+
   const app = await NestFactory.create(AppModule)
 
   app.enableCors({
