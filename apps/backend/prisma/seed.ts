@@ -1,3 +1,16 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TRABA DE SEGURIDAD — leer antes de tocar este archivo.
+//
+// Este seed está pensado ÚNICAMENTE para el entorno de desarrollo (Neon
+// local-dev). Correrlo por accidente contra la base de producción puede
+// sobrescribir o reactivar datos reales (ya pasó una vez: reactivó empresas
+// dadas de baja y sobrescribió "Administración Central").
+//
+// Antes de tocar la base, se valida que DATABASE_URL corresponda al host de
+// desarrollo esperado (debe contener "neon.tech"). Si no lo es, el script
+// aborta sin conectarse. Para saltear esto a propósito, setear
+// ALLOW_SEED_PROD=yes al correr el comando.
+// ─────────────────────────────────────────────────────────────────────────────
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import * as bcrypt from 'bcrypt'
@@ -5,6 +18,26 @@ import * as dotenv from 'dotenv'
 import * as path from 'path'
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
+
+function validarEntorno() {
+  const url = process.env.DATABASE_URL ?? ''
+  const esDesarrollo = url.includes('neon.tech')
+
+  if (esDesarrollo) return
+
+  if (process.env.ALLOW_SEED_PROD === 'yes') {
+    console.warn('⚠️  ADVERTENCIA: DATABASE_URL no contiene "neon.tech" (no parece ser el de desarrollo).')
+    console.warn('⚠️  ALLOW_SEED_PROD=yes está seteado — se continúa de todos modos.')
+    return
+  }
+
+  console.error('❌ DATABASE_URL no parece ser el de desarrollo (no contiene "neon.tech").')
+  console.error('❌ Correr este seed contra esa base podría sobrescribir o reactivar datos reales.')
+  console.error('❌ Si es realmente lo que querés hacer, volvé a correrlo con ALLOW_SEED_PROD=yes.')
+  process.exit(1)
+}
+
+validarEntorno()
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
