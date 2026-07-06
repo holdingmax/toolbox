@@ -62,16 +62,18 @@ model Nivel {
 }
 
 model Herramienta {
-  id             String   @id @default(cuid())
-  nombre         String
-  descripcion    String?
-  url            String
-  icono_url      String?
-  soporte        String?
-  orden          Int      @default(0)
-  activo         Boolean  @default(true)
-  creado_en      DateTime @default(now())
-  actualizado_en DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  nombre              String
+  descripcion         String?
+  url                 String
+  icono_url           String?
+  soporte             String?
+  orden               Int       @default(0)
+  activo              Boolean   @default(true)
+  estado_servicio     String    @default("desconocido")
+  ultima_verificacion DateTime?
+  creado_en           DateTime  @default(now())
+  actualizado_en      DateTime  @updatedAt
 
   herramientas_niveles HerramientaNivel[]
   historial_accesos    HistorialAcceso[]

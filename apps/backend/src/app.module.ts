@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
+import { ScheduleModule } from '@nestjs/schedule'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { AccesosModule } from './accesos/accesos.module'
 import { HerramientasAdminModule } from './admin/herramientas/herramientas-admin.module'
@@ -24,6 +25,7 @@ import { PrismaModule } from './prisma/prisma.module'
       rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
       exclude: ['/api/{*path}'],
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
     NavegacionModule,

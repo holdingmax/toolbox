@@ -3,12 +3,16 @@ import { Roles } from '../../auth/decorators/roles.decorator'
 import { CreateHerramientaDto } from './dto/create-herramienta.dto'
 import { CreatePublicacionDto } from './dto/create-publicacion.dto'
 import { UpdateHerramientaDto } from './dto/update-herramienta.dto'
+import { HealthCheckService } from './health-check.service'
 import { HerramientasAdminService } from './herramientas-admin.service'
 
 @Roles('Administrador')
 @Controller('admin/herramientas')
 export class HerramientasAdminController {
-  constructor(private service: HerramientasAdminService) {}
+  constructor(
+    private service: HerramientasAdminService,
+    private healthCheckService: HealthCheckService,
+  ) {}
 
   @Get()
   findAll(
@@ -41,6 +45,11 @@ export class HerramientasAdminController {
   @Patch(':id/estado')
   toggleEstado(@Param('id') id: string) {
     return this.service.toggleEstado(id)
+  }
+
+  @Post('verificar-salud')
+  verificarSalud() {
+    return this.healthCheckService.verificarTodas()
   }
 
   @Get(':id/publicaciones')

@@ -118,6 +118,8 @@ export interface HerramientaAdmin {
   soporte: string | null
   orden: number
   activo: boolean
+  estado_servicio: 'ok' | 'error' | 'desconocido'
+  ultima_verificacion: string | null
   creado_en: string
   actualizado_en: string
 }
@@ -167,6 +169,11 @@ export const updateHerramienta = (id: string, payload: UpdateHerramientaPayload)
 
 export const toggleEstadoHerramienta = (id: string) =>
   client.patch<HerramientaAdmin>(`/api/admin/herramientas/${id}/estado`).then((r) => r.data)
+
+export const verificarSaludHerramientas = () =>
+  client
+    .post<{ id: string; nombre: string; estado_servicio: string }[]>('/api/admin/herramientas/verificar-salud')
+    .then((r) => r.data)
 
 export const getPublicaciones = (herramientaId: string) =>
   client.get<PublicacionAdmin[]>(`/api/admin/herramientas/${herramientaId}/publicaciones`).then((r) => r.data)

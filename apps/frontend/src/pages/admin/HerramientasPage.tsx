@@ -8,10 +8,33 @@ import {
   createPublicacion,
   togglePublicacion,
   getNiveles,
+  verificarSaludHerramientas,
   type HerramientaAdmin,
   type PublicacionAdmin,
   type NivelAdmin,
 } from '../../api/admin.api'
+
+// ── Indicador de salud ────────────────────────────────────────────────────────
+
+function EstadoServicioDot({ herramienta }: { herramienta: HerramientaAdmin }) {
+  const color =
+    herramienta.estado_servicio === 'ok'
+      ? 'bg-status-active'
+      : herramienta.estado_servicio === 'error'
+        ? 'bg-status-inactive'
+        : 'bg-text-secondary/40'
+
+  const tooltip = herramienta.ultima_verificacion
+    ? `Estado: ${herramienta.estado_servicio} · Última verificación: ${new Date(herramienta.ultima_verificacion).toLocaleString('es-AR')}`
+    : 'Sin verificar aún'
+
+  return (
+    <span
+      className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${color}`}
+      title={tooltip}
+    />
+  )
+}
 
 // ── Modal herramienta ─────────────────────────────────────────────────────────
 
@@ -396,6 +419,7 @@ export default function HerramientasPage() {
   const [editando, setEditando] = useState<HerramientaAdmin | null>(null)
   const [pubHerramienta, setPubHerramienta] = useState<HerramientaAdmin | null>(null)
   const [togglingId, setTogglingId] = useState<string | null>(null)
+  const [verificando, setVerificando] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
   const totalPages = Math.max(1, Math.ceil(total / limit))
@@ -442,6 +466,18 @@ export default function HerramientasPage() {
     }
   }
 
+  const handleVerificarSalud = async () => {
+    setVerificando(true)
+    try {
+      await verificarSaludHerramientas()
+      await fetchHerramientas()
+    } catch {
+      // manejado por interceptor
+    } finally {
+      setVerificando(false)
+    }
+  }
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -452,13 +488,22 @@ export default function HerramientasPage() {
             {total} {total === 1 ? 'herramienta registrada' : 'herramientas registradas'}
           </p>
         </div>
-        <button
-          onClick={() => { setEditando(null); setModalOpen(true) }}
-          className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span>+</span>
-          <span>Nueva herramienta</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleVerificarSalud}
+            disabled={verificando}
+            className="bg-white/5 hover:bg-white/10 text-text-secondary px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {verificando ? 'Verificando…' : 'Verificar salud'}
+          </button>
+          <button
+            onClick={() => { setEditando(null); setModalOpen(true) }}
+            className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            <span>+</span>
+            <span>Nueva herramienta</span>
+          </button>
+        </div>
       </div>
 
       {/* Buscador */}
@@ -516,7 +561,12 @@ export default function HerramientasPage() {
                   key={h.id}
                   className="border-b border-border-card hover:bg-white/[0.03] transition-colors"
                 >
-                  <td className="px-4 py-3 text-text-primary font-medium">{h.nombre}</td>
+                  <td className="px-4 py-3 text-text-primary font-medium">
+                    <span className="inline-flex items-center gap-2">
+                      <EstadoServicioDot herramienta={h} />
+                      {h.nombre}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-text-secondary max-w-xs">
                     <a
                       href={h.url}
