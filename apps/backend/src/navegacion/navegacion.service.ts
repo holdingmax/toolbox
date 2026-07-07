@@ -38,6 +38,12 @@ export class NavegacionService {
     const visibles = await this.getVisibleNodes(usuarioId)
     const podados = await this.pruneEmptyBranches(visibles)
 
+    // El nodo pedido también debe tener contenido en su subárbol — si no,
+    // se trata igual que "no encontrado" (mismo criterio que los listados).
+    if (!podados.some((n) => n.id === nivelId)) {
+      throw new NotFoundException('Nivel no encontrado')
+    }
+
     const hijos = podados
       .filter((n) => n.parent_id === nivelId)
       .map((n) => ({

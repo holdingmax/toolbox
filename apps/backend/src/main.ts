@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter'
 
 async function bootstrap() {
   const jwtSecret = process.env.JWT_SECRET
@@ -26,6 +27,8 @@ async function bootstrap() {
       transform: true,
     }),
   )
+
+  app.useGlobalFilters(new PrismaExceptionFilter())
 
   app.setGlobalPrefix('api')
 
