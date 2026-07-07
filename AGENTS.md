@@ -108,7 +108,7 @@ Toda acción relevante debe poder auditarse. Como mínimo, los accesos a herrami
 - No asumir una cantidad fija de niveles organizacionales.
 - No crear pantallas específicas hardcodeadas para una empresa.
 - No asignar permisos directamente sobre herramientas salvo una decisión arquitectónica futura explícita y documentada.
-- Mantener la compatibilidad conceptual entre SQLite en desarrollo y PostgreSQL en producción.
+- Mantener la compatibilidad conceptual entre PostgreSQL en desarrollo (Neon) y PostgreSQL en producción (Render) — son bases separadas, nunca comparten datos.
 - No avanzar a una etapa de desarrollo sin contar con las definiciones necesarias de las etapas anteriores.
 
 Si un requerimiento contradice alguna de estas reglas, no debe implementarse silenciosamente: primero se debe señalar el conflicto y proponer una alternativa compatible con la arquitectura.
@@ -118,8 +118,8 @@ Si un requerimiento contradice alguna de estas reglas, no debe implementarse sil
 - Arquitectura de repositorio: monorepo simple.
 - Backend: NestJS.
 - Frontend: React, Vite y TypeScript.
-- Base de datos de desarrollo: SQLite.
-- Base de datos prevista para producción: PostgreSQL.
+- Base de datos de desarrollo: PostgreSQL (Neon, branch `local-dev`).
+- Base de datos de producción: PostgreSQL (Render) — instancia separada, nunca comparte datos con desarrollo.
 - Repositorio: `holdingmax/toolbox`.
 - Plataforma de despliegue: Render.
 
@@ -140,7 +140,7 @@ El desarrollo del producto debe avanzar en el siguiente orden:
 1. Backend health check.
 2. Frontend landing inicial.
 3. Configuración base.
-4. Prisma + SQLite.
+4. Prisma + PostgreSQL.
 5. Modelo de datos inicial.
 6. Autenticación.
 7. Dashboard.
@@ -164,6 +164,6 @@ Antes de implementar, se debe poder responder con claridad:
 5. ¿Cómo se audita?
 6. ¿Sigue funcionando con nuevos tipos y cantidades de niveles organizacionales?
 7. ¿Mantiene desacopladas las herramientas publicadas?
-8. ¿Es compatible con SQLite y con la futura migración a PostgreSQL?
+8. ¿Es compatible con PostgreSQL en desarrollo (Neon) y en producción (Render)?
 
 Solo después de validar estos puntos corresponde diseñar e implementar la solución.

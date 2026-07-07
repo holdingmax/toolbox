@@ -39,6 +39,15 @@ function validarEntorno() {
 
 validarEntorno()
 
+function requireEnv(name: string): string {
+  const value = process.env[name]
+  if (!value) {
+    console.error(`❌ Falta la variable de entorno ${name}. El seed no puede continuar sin ella.`)
+    process.exit(1)
+  }
+  return value
+}
+
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
@@ -71,7 +80,7 @@ async function main() {
   console.log(`Rol: ${rolOperador.nombre}`)
 
   // ── Usuarios ───────────────────────────────────────────────────────────────
-  const adminHash = await bcrypt.hash('Admin2026!', 10)
+  const adminHash = await bcrypt.hash(requireEnv('SEED_ADMIN_PASSWORD'), 10)
   const adminUser = await prisma.usuario.upsert({
     where: { email: 'admin@toolbox.com' },
     update: {},
@@ -86,7 +95,7 @@ async function main() {
   })
   console.log(`Usuario: ${adminUser.nombre}`)
 
-  const mariaHash = await bcrypt.hash('Toolbox2026!', 10)
+  const mariaHash = await bcrypt.hash(requireEnv('SEED_OPERADOR_PASSWORD'), 10)
   const mariaUser = await prisma.usuario.upsert({
     where: { email: 'maria@toolbox.com' },
     update: {},

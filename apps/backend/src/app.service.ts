@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'TOOLBOX API funcionando';
+  getHello(): { status: string } {
+    return { status: 'ok' };
   }
 }

@@ -41,14 +41,16 @@ Federico Vigo y la dirección definen qué personas tienen acceso y a qué herra
 | Capa | Tecnología |
 |---|---|
 | Backend | NestJS + TypeScript |
-| Base de datos (desarrollo) | SQLite |
-| Base de datos (producción) | PostgreSQL |
+| Base de datos (desarrollo) | PostgreSQL (Neon, branch `local-dev`) |
+| Base de datos (producción) | PostgreSQL (Render) |
 | Frontend | React + TypeScript + Vite |
 | ORM | Prisma |
 | Deploy | Render |
 | Repositorio | GitHub HoldingMax (`holdingmax/toolbox`) |
 
 **No ofrecer alternativas de stack. Está fijado.**
+
+Desarrollo y producción son bases PostgreSQL separadas — nunca comparten datos.
 
 ### Nota Prisma 7
 
@@ -192,7 +194,7 @@ Respetar esta secuencia como dependencia de trabajo, no solo como lista de funci
 ✅ 1.  Backend health check
 ✅ 2.  Frontend landing inicial
 ✅ 3.  Configuración base
-✅ 4.  Prisma + SQLite
+✅ 4.  Prisma + PostgreSQL
 ✅ 5.  Modelo de datos inicial
 ✅ 6.  Autenticación
 ✅ 7.  Dashboard
@@ -235,7 +237,7 @@ Antes de implementar, responder con claridad:
 5. ¿Cómo se audita?
 6. ¿Sigue funcionando con nuevos tipos y cantidades de niveles organizacionales?
 7. ¿Mantiene desacopladas las herramientas publicadas?
-8. ¿Es compatible con SQLite en desarrollo y PostgreSQL en producción?
+8. ¿Es compatible con PostgreSQL en desarrollo (Neon) y en producción (Render)?
 
 Si un requerimiento contradice alguna regla: **señalar el conflicto y proponer alternativa antes de implementar.**
 
