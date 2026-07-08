@@ -15,7 +15,11 @@ client.interceptors.request.use((config) => {
 client.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
+    // El 401 del propio login (credenciales inválidas) no es una sesión
+    // expirada — debe llegar tal cual a quien hizo el request para que
+    // muestre su propio mensaje de error, sin resetear la pantalla.
+    const esLogin = error.config?.url === '/api/auth/login'
+    if (error.response?.status === 401 && !esLogin) {
       localStorage.removeItem('toolbox_token')
       localStorage.removeItem('toolbox_user')
       window.location.href = '/login'
