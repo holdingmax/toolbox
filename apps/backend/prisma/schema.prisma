@@ -18,14 +18,16 @@ model Rol {
 }
 
 model Usuario {
-  id             String   @id @default(cuid())
-  nombre         String
-  email          String   @unique
-  password_hash  String
-  rol_id         String
-  activo         Boolean  @default(true)
-  creado_en      DateTime @default(now())
-  actualizado_en DateTime @updatedAt
+  id                 String    @id @default(cuid())
+  nombre             String
+  email              String    @unique
+  password_hash      String
+  rol_id             String
+  activo             Boolean   @default(true)
+  reset_token        String?   @unique
+  reset_token_expira DateTime?
+  creado_en          DateTime  @default(now())
+  actualizado_en     DateTime  @updatedAt
 
   rol                      Rol                       @relation(fields: [rol_id], references: [id], onDelete: Restrict)
   permisos                 PermisoNivel[]

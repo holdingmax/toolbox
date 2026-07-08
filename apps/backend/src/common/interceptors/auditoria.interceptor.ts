@@ -15,7 +15,7 @@ import { AUDITABLE_KEY, AuditableMeta } from '../decorators/auditable.decorator'
 // Campos que nunca deben persistirse en el log de auditoría, sin importar
 // si la acción es crear, editar o toggle.
 const CAMPOS_SENSIBLES: Partial<Record<AuditableMeta['entidad'], string[]>> = {
-  usuario: ['password_hash'],
+  usuario: ['password_hash', 'reset_token'],
 }
 
 // Campos que cambian en toda edición aunque no haya un cambio real (ruido).
