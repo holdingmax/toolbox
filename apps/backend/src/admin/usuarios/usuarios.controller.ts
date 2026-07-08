@@ -8,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { Roles } from '../../auth/decorators/roles.decorator'
+import { Auditable } from '../../common/decorators/auditable.decorator'
 import { CreateUsuarioDto } from './dto/create-usuario.dto'
 import { UpdateUsuarioDto } from './dto/update-usuario.dto'
 import { UsuariosService } from './usuarios.service'
@@ -35,16 +36,19 @@ export class UsuariosController {
     return this.usuariosService.findOne(id)
   }
 
+  @Auditable({ entidad: 'usuario', modelo: 'usuario', accion: 'crear' })
   @Post()
   create(@Body() dto: CreateUsuarioDto) {
     return this.usuariosService.create(dto)
   }
 
+  @Auditable({ entidad: 'usuario', modelo: 'usuario', accion: 'editar' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
     return this.usuariosService.update(id, dto)
   }
 
+  @Auditable({ entidad: 'usuario', modelo: 'usuario', accion: 'toggle' })
   @Patch(':id/estado')
   toggleEstado(@Param('id') id: string) {
     return this.usuariosService.toggleEstado(id)

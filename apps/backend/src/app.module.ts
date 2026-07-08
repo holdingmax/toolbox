@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { AccesosModule } from './accesos/accesos.module'
@@ -15,6 +15,7 @@ import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard'
 import { RolesGuard } from './auth/guards/roles.guard'
+import { AuditoriaInterceptor } from './common/interceptors/auditoria.interceptor'
 import { NavegacionModule } from './navegacion/navegacion.module'
 import { PrismaModule } from './prisma/prisma.module'
 
@@ -42,6 +43,7 @@ import { PrismaModule } from './prisma/prisma.module'
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_INTERCEPTOR, useClass: AuditoriaInterceptor },
   ],
 })
 export class AppModule {}

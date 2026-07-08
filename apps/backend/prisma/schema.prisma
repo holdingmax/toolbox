@@ -27,9 +27,10 @@ model Usuario {
   creado_en      DateTime @default(now())
   actualizado_en DateTime @updatedAt
 
-  rol               Rol               @relation(fields: [rol_id], references: [id], onDelete: Restrict)
-  permisos          PermisoNivel[]
-  historial_accesos HistorialAcceso[]
+  rol                      Rol                       @relation(fields: [rol_id], references: [id], onDelete: Restrict)
+  permisos                 PermisoNivel[]
+  historial_accesos        HistorialAcceso[]
+  historial_administracion HistorialAdministracion[]
 
   @@index([rol_id])
   @@index([activo])
@@ -128,4 +129,22 @@ model HistorialAcceso {
   @@index([usuario_id, fecha_acceso])
   @@index([herramienta_id, fecha_acceso])
   @@map("historial_accesos")
+}
+
+model HistorialAdministracion {
+  id         String   @id @default(cuid())
+  usuario_id String
+  accion     String
+  entidad    String
+  entidad_id String
+  cambios    Json?
+  ip         String?
+  user_agent String?
+  fecha      DateTime @default(now())
+
+  usuario Usuario @relation(fields: [usuario_id], references: [id], onDelete: Restrict)
+
+  @@index([usuario_id, fecha])
+  @@index([entidad, entidad_id, fecha])
+  @@map("historial_administracion")
 }

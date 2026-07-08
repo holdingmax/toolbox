@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { Roles } from '../../auth/decorators/roles.decorator'
+import { Auditable } from '../../common/decorators/auditable.decorator'
 import { CreateHerramientaDto } from './dto/create-herramienta.dto'
 import { CreatePublicacionDto } from './dto/create-publicacion.dto'
 import { UpdateHerramientaDto } from './dto/update-herramienta.dto'
@@ -32,16 +33,19 @@ export class HerramientasAdminController {
     return this.service.findOne(id)
   }
 
+  @Auditable({ entidad: 'herramienta', modelo: 'herramienta', accion: 'crear' })
   @Post()
   create(@Body() dto: CreateHerramientaDto) {
     return this.service.create(dto)
   }
 
+  @Auditable({ entidad: 'herramienta', modelo: 'herramienta', accion: 'editar' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateHerramientaDto) {
     return this.service.update(id, dto)
   }
 
+  @Auditable({ entidad: 'herramienta', modelo: 'herramienta', accion: 'toggle' })
   @Patch(':id/estado')
   toggleEstado(@Param('id') id: string) {
     return this.service.toggleEstado(id)
@@ -57,6 +61,7 @@ export class HerramientasAdminController {
     return this.service.getPublicaciones(id)
   }
 
+  @Auditable({ entidad: 'publicacion', modelo: 'herramientaNivel', accion: 'crear' })
   @Post(':id/publicaciones')
   createPublicacion(
     @Param('id') herramientaId: string,
@@ -65,6 +70,7 @@ export class HerramientasAdminController {
     return this.service.createPublicacion(herramientaId, dto)
   }
 
+  @Auditable({ entidad: 'publicacion', modelo: 'herramientaNivel', accion: 'toggle', paramId: 'pubId' })
   @Patch(':id/publicaciones/:pubId')
   togglePublicacion(@Param('pubId') pubId: string) {
     return this.service.togglePublicacion(pubId)
