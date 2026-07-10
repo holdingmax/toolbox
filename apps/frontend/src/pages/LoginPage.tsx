@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { login as loginApi } from '../api/auth.api'
+import { login as loginApi, forgotPassword as forgotPasswordApi } from '../api/auth.api'
 import CubeIcon from '../components/CubeIcon'
 
 function EyeIcon() {
@@ -35,6 +35,7 @@ export default function LoginPage() {
   const [recordarme, setRecordarme] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showForgotModal, setShowForgotModal] = useState(false)
 
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -58,6 +59,7 @@ export default function LoginPage() {
     'w-full bg-[#160e28] border border-[rgba(124,58,237,0.25)] rounded-lg px-4 py-2.5 text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-accent transition-colors text-sm'
 
   return (
+    <>
     <div className="min-h-screen flex">
 
       {/* ── Panel izquierdo — branding ─────────────────────────────────── */}
@@ -202,6 +204,7 @@ export default function LoginPage() {
                   </label>
                   <button
                     type="button"
+                    onClick={() => setShowForgotModal(true)}
                     className="text-accent hover:text-accent-hover text-sm transition-colors"
                   >
                     ¿Olvidaste tu contraseña?
@@ -238,6 +241,119 @@ export default function LoginPage() {
         </div>
       </div>
 
+    </div>
+    {showForgotModal && (
+      <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+    )}
+    </>
+  )
+}
+
+function ForgotPasswordModal({ onClose }: { onClose: () => void }) {
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [enviado, setEnviado] = useState(false)
+  const [error, setError] = useState('')
+
+  const inputClass =
+    'w-full bg-[#160e28] border border-[rgba(124,58,237,0.25)] rounded-lg px-4 py-2.5 text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-accent transition-colors text-sm'
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
+    setError('')
+    setLoading(true)
+    try {
+      await forgotPasswordApi(email)
+      setEnviado(true)
+    } catch (err: any) {
+      if (err?.response) {
+        // Respuesta del backend (400 validación, 429 rate limit, etc.) — no
+        // revela si el email existe, se puede mostrar tal cual.
+        const msg = err.response.data?.message ?? 'Ocurrió un error. Intentá de nuevo.'
+        setError(Array.isArray(msg) ? msg.join(' · ') : msg)
+      } else {
+        // Sin respuesta del backend: falla de red real, no un resultado de
+        // negocio — no corresponde fingir éxito.
+        setError('No se pudo conectar. Revisá tu conexión e intentá de nuevo.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+      <div
+        className="bg-[#2a1f45] rounded-2xl w-full max-w-md p-8"
+        style={{
+          border: '1px solid #7c3aed',
+          boxShadow: '0 0 40px rgba(124,58,237,0.3), 0 20px 60px rgba(0,0,0,0.5)',
+        }}
+      >
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-text-primary text-xl font-bold">Recuperar contraseña</h2>
+          <button
+            onClick={onClose}
+            aria-label="Cerrar"
+            className="text-text-secondary hover:text-text-primary transition-colors text-xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        {enviado ? (
+          <>
+            <p className="text-text-secondary text-sm mt-4 mb-6">
+              Si el email existe, te enviamos un link para recuperar tu contraseña. Revisá tu casilla.
+            </p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full bg-white/5 hover:bg-white/10 text-text-secondary rounded-lg py-2.5 text-sm font-medium transition-colors"
+            >
+              Cerrar
+            </button>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-4">
+            <p className="text-text-secondary text-sm mb-4">
+              Ingresá tu email y te enviamos un link para recuperar tu contraseña.
+            </p>
+
+            {error && (
+              <div className="text-status-inactive text-sm bg-status-inactive/10 border border-status-inactive/30 rounded-lg px-3 py-2.5 mb-4">
+                {error}
+              </div>
+            )}
+
+            <label className="block text-text-secondary text-sm font-medium mb-1.5">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="tu@email.com"
+              autoComplete="email"
+              className={inputClass}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-[#7c3aed] to-[#5b21b6] hover:from-[#8b5cf6] hover:to-[#6d28d9] disabled:opacity-60 text-white font-semibold py-3 rounded-lg transition-all text-sm mt-5"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Enviando…
+                </span>
+              ) : (
+                'Enviar link de recuperación'
+              )}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   )
 }

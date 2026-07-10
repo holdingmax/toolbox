@@ -15,11 +15,13 @@ client.interceptors.request.use((config) => {
 client.interceptors.response.use(
   (res) => res,
   (error) => {
-    // El 401 del propio login (credenciales inválidas) no es una sesión
-    // expirada — debe llegar tal cual a quien hizo el request para que
-    // muestre su propio mensaje de error, sin resetear la pantalla.
-    const esLogin = error.config?.url === '/api/auth/login'
-    if (error.response?.status === 401 && !esLogin) {
+    // El 401 del login (credenciales inválidas) y del reset-password
+    // (token inválido/expirado) no son una sesión expirada — deben llegar
+    // tal cual a quien hizo el request para que muestre su propio mensaje
+    // de error, sin resetear la pantalla.
+    const RUTAS_SIN_REDIRECT = ['/api/auth/login', '/api/auth/reset-password']
+    const esRutaPublica = RUTAS_SIN_REDIRECT.includes(error.config?.url)
+    if (error.response?.status === 401 && !esRutaPublica) {
       localStorage.removeItem('toolbox_token')
       localStorage.removeItem('toolbox_user')
       window.location.href = '/login'

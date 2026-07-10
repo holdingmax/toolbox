@@ -20,6 +20,14 @@ export interface LoginResponse {
 export const login = (payload: LoginPayload) =>
   client.post<LoginResponse>('/api/auth/login', payload).then((r) => r.data)
 
+export const forgotPassword = (email: string) =>
+  client.post<{ ok: boolean }>('/api/auth/forgot-password', { email }).then((r) => r.data)
+
+export const resetPassword = (token: string, nueva_contraseña: string) =>
+  client
+    .post<{ ok: boolean }>('/api/auth/reset-password', { token, nueva_contraseña })
+    .then((r) => r.data)
+
 export const getMe = () =>
   client.get('/api/auth/me').then((r) => r.data)
 
