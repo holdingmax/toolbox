@@ -56,6 +56,14 @@ Desarrollo y producción son bases PostgreSQL separadas — nunca comparten dato
 
 La versión instalada es Prisma 7. La URL de conexión ya no va en `schema.prisma` sino en `prisma.config.ts` (archivo en `apps/backend/`). El schema solo declara `provider`.
 
+### Migraciones de schema (Prisma Migrate)
+
+El proyecto tiene un historial real de migraciones en `apps/backend/prisma/migrations/`, baselineado contra el schema real tanto en desarrollo como en producción (ver commit `88f832d`).
+
+- **Cambio de schema en local**: editar `schema.prisma` → `npx prisma migrate dev --name <descripcion>`. Esto genera la migración y la aplica automáticamente contra la base de desarrollo (Neon `local-dev`). Requiere `SHADOW_DATABASE_URL` configurada en `.env` (una branch de Neon dedicada, separada de `local-dev` — nunca la misma base). Commitear la carpeta de migración nueva junto con el cambio de código.
+- **Producción**: nunca se toca el schema a mano ni se corre nada manualmente. El `buildCommand` de Render corre `npx prisma migrate deploy`, que aplica automáticamente cualquier migración pendiente en cada deploy.
+- **`prisma db push` queda retirado para este proyecto.** No usarlo más, ni en desarrollo ni en el build de producción — todo cambio de schema debe pasar por una migración versionada y commiteada.
+
 ---
 
 ## Modelo de datos — respetar nombres exactos

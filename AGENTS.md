@@ -123,6 +123,24 @@ Si un requerimiento contradice alguna de estas reglas, no debe implementarse sil
 - Repositorio: `holdingmax/toolbox`.
 - Plataforma de despliegue: Render.
 
+## Migraciones de base de datos (Prisma Migrate)
+
+El schema de Prisma se versiona con un historial real de migraciones
+(`apps/backend/prisma/migrations/`), baselineado a partir del schema real
+tanto en desarrollo como en producción.
+
+- **Cambios de schema en local**: editar `schema.prisma` y correr
+  `npx prisma migrate dev --name <descripcion>` — genera la migración y la
+  aplica contra la base de desarrollo (Neon `local-dev`) automáticamente.
+  Requiere `SHADOW_DATABASE_URL` configurada (una branch de Neon dedicada,
+  separada de `local-dev`) para poder detectar drift.
+- **Producción**: nunca se modifica el schema a mano. El `buildCommand` de
+  Render corre `npx prisma migrate deploy`, que aplica automáticamente
+  cualquier migración nueva que llegue en el commit.
+- **`prisma db push` queda retirado** para este proyecto — no se usa más,
+  ni en desarrollo ni en el deploy. Todo cambio de schema debe pasar por una
+  migración versionada en el repositorio.
+
 ## Estructura del repositorio
 
 ```text
