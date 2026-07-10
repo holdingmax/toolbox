@@ -14,7 +14,7 @@ services:
       cd apps/frontend && npm install --include=dev && npm run build &&
       cd ../backend && npm install --include=dev &&
       npx prisma generate &&
-      npx prisma db push &&
+      npx prisma migrate deploy &&
       npm run build
     startCommand: node apps/backend/dist/main.js
     envVars:
