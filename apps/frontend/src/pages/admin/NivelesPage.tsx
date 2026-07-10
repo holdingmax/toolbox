@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   getNiveles,
+  getTiposNivel,
   createNivel,
   updateNivel,
   toggleEstadoNivel,
@@ -34,6 +35,13 @@ function NivelModal({ nivel, defaultParentId, niveles, onClose, onSaved }: Modal
   const [icono_url, setIconoUrl] = useState(nivel?.icono_url ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [tipos, setTipos] = useState<string[]>([])
+
+  useEffect(() => {
+    getTiposNivel()
+      .then(setTipos)
+      .catch(() => setTipos([]))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -111,11 +119,17 @@ function NivelModal({ nivel, defaultParentId, niveles, onClose, onSaved }: Modal
             </label>
             <input
               type="text"
+              list="tipos-nivel-datalist"
               value={tipo}
               onChange={(e) => setTipo(e.target.value)}
               className={inputClass}
-              placeholder="Ej: empresa, area, sector, departamento"
+              placeholder="Ej: Empresa, Área, Sector, Departamento"
             />
+            <datalist id="tipos-nivel-datalist">
+              {tipos.map((t) => (
+                <option key={t} value={t} />
+              ))}
+            </datalist>
           </div>
 
           <div>

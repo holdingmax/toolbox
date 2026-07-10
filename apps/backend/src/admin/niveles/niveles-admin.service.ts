@@ -15,6 +15,15 @@ export class NivelesAdminService {
     return this.prisma.nivel.findMany({ orderBy: { ruta: 'asc' } })
   }
 
+  async findTiposDistintos() {
+    const tipos = await this.prisma.nivel.findMany({
+      select: { tipo: true },
+      distinct: ['tipo'],
+      orderBy: { tipo: 'asc' },
+    })
+    return tipos.map((t) => t.tipo)
+  }
+
   async findOne(id: string) {
     const nivel = await this.prisma.nivel.findFirst({ where: { id } })
     if (!nivel) throw new NotFoundException('Nivel no encontrado')

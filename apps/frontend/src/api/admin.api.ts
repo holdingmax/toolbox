@@ -98,6 +98,9 @@ export interface UpdateNivelPayload {
 export const getNiveles = () =>
   client.get<NivelAdmin[]>('/api/admin/niveles').then((r) => r.data)
 
+export const getTiposNivel = () =>
+  client.get<string[]>('/api/admin/niveles/tipos').then((r) => r.data)
+
 export const createNivel = (payload: CreateNivelPayload) =>
   client.post<NivelAdmin>('/api/admin/niveles', payload).then((r) => r.data)
 

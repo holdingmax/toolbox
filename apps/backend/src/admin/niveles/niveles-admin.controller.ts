@@ -15,6 +15,13 @@ export class NivelesAdminController {
     return this.service.findAll()
   }
 
+  // Declarada antes de ":id" — si no, ":id" la captura primero y "tipos"
+  // nunca llega a matchear (Nest registra las rutas en orden de declaración).
+  @Get('tipos')
+  findTiposDistintos() {
+    return this.service.findTiposDistintos()
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id)
