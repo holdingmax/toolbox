@@ -162,15 +162,15 @@ export class AccesosService {
     usuarioId: string,
     herramientaId: string,
   ): Promise<boolean> {
-    // La herramienta debe estar publicada en al menos un nivel al que el usuario tiene acceso
+    // La herramienta debe estar publicada en al menos un nivel activo al que el usuario tiene acceso
     const publicaciones = await this.prisma.herramientaNivel.findMany({
-      where: { herramienta_id: herramientaId, activo: true },
+      where: { herramienta_id: herramientaId, activo: true, nivel: { activo: true } },
       include: { nivel: { select: { ruta: true } } },
     })
     if (!publicaciones.length) return false
 
     const permisos = await this.prisma.permisoNivel.findMany({
-      where: { usuario_id: usuarioId, activo: true },
+      where: { usuario_id: usuarioId, activo: true, nivel: { activo: true } },
       include: { nivel: { select: { ruta: true } } },
     })
     if (!permisos.length) return false
