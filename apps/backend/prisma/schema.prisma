@@ -24,6 +24,7 @@ model Usuario {
   password_hash      String
   rol_id             String
   activo             Boolean   @default(true)
+  debe_cambiar_password Boolean @default(false)
   reset_token        String?   @unique
   reset_token_expira DateTime?
   creado_en          DateTime  @default(now())

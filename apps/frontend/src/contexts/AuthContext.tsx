@@ -9,6 +9,7 @@ interface AuthState {
 interface AuthContextValue extends AuthState {
   login: (token: string, usuario: UsuarioAutenticado) => void
   logout: () => void
+  actualizarUsuario: (cambios: Partial<UsuarioAutenticado>) => void
   isAuthenticated: boolean
 }
 
@@ -40,8 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ token: null, usuario: null })
   }, [])
 
+  const actualizarUsuario = useCallback((cambios: Partial<UsuarioAutenticado>) => {
+    setState((prev) => {
+      if (!prev.usuario) return prev
+      const usuario = { ...prev.usuario, ...cambios }
+      localStorage.setItem('toolbox_user', JSON.stringify(usuario))
+      return { ...prev, usuario }
+    })
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, isAuthenticated: !!state.token }}>
+    <AuthContext.Provider value={{ ...state, login, logout, actualizarUsuario, isAuthenticated: !!state.token }}>
       {children}
     </AuthContext.Provider>
   )

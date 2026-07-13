@@ -59,6 +59,7 @@ export class UsuariosService {
         email: dto.email,
         password_hash,
         rol_id: dto.rol_id,
+        debe_cambiar_password: true,
       },
       include: { rol: true },
     })
@@ -73,7 +74,10 @@ export class UsuariosService {
     if (dto.email !== undefined) data.email = dto.email
     if (dto.rol_id !== undefined) data.rol_id = dto.rol_id
     if (dto.activo !== undefined) data.activo = dto.activo
-    if (dto.password) data.password_hash = await bcrypt.hash(dto.password, 10)
+    if (dto.password) {
+      data.password_hash = await bcrypt.hash(dto.password, 10)
+      data.debe_cambiar_password = true
+    }
 
     const updated = await this.prisma.usuario.update({
       where: { id },

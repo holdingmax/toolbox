@@ -10,6 +10,7 @@ export interface UsuarioAutenticado {
   nombre: string
   email: string
   rol: { id: string; nombre: string }
+  debe_cambiar_password: boolean
 }
 
 export interface LoginResponse {

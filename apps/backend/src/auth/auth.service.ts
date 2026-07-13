@@ -48,6 +48,7 @@ export class AuthService {
         nombre: usuario.nombre,
         email: usuario.email,
         rol: usuario.rol,
+        debe_cambiar_password: usuario.debe_cambiar_password,
       },
     }
   }
@@ -66,7 +67,7 @@ export class AuthService {
     const hash = await bcrypt.hash(nuevaContraseña, 10)
     await this.prisma.usuario.update({
       where: { id: userId },
-      data: { password_hash: hash },
+      data: { password_hash: hash, debe_cambiar_password: false },
     })
 
     return { ok: true }
@@ -116,7 +117,12 @@ export class AuthService {
     const hash = await bcrypt.hash(nuevaContraseña, 10)
     await this.prisma.usuario.update({
       where: { id: usuario.id },
-      data: { password_hash: hash, reset_token: null, reset_token_expira: null },
+      data: {
+        password_hash: hash,
+        reset_token: null,
+        reset_token_expira: null,
+        debe_cambiar_password: false,
+      },
     })
 
     return { ok: true }

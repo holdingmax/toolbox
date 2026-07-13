@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import {
   getRootNodes,
@@ -110,6 +111,20 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {usuario?.debe_cambiar_password && (
+        <div className="flex items-center justify-between gap-4 bg-accent/10 border border-accent/25 rounded-lg px-4 py-3 mb-6 text-sm">
+          <span className="text-text-primary">
+            🔑 Estás usando una contraseña temporal — te recomendamos cambiarla.
+          </span>
+          <Link
+            to="/configuracion"
+            className="text-accent hover:text-accent-hover font-semibold whitespace-nowrap transition-colors"
+          >
+            Cambiar ahora →
+          </Link>
+        </div>
+      )}
 
       {error && (
         <p className="text-status-inactive bg-status-inactive/10 border border-status-inactive/30 rounded-lg px-4 py-3 mb-6 text-sm">

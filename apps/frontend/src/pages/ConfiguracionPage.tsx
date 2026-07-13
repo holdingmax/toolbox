@@ -31,7 +31,7 @@ function EyeOffIcon() {
 }
 
 export default function ConfiguracionPage() {
-  const { usuario } = useAuth()
+  const { usuario, actualizarUsuario } = useAuth()
 
   // ── Nivel raíz para mostrar organizaciones con acceso ────────────────────────
   const [niveles, setNiveles] = useState<NivelResumen[]>([])
@@ -72,6 +72,7 @@ export default function ConfiguracionPage() {
     setSaving(true)
     try {
       await changePassword(actual, nueva)
+      actualizarUsuario({ debe_cambiar_password: false })
       setPassOk(true)
       setActual('')
       setNueva('')
