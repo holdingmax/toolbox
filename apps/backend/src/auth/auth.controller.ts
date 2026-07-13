@@ -6,6 +6,7 @@ import { ChangePasswordDto } from './dto/change-password.dto'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { LoginDto } from './dto/login.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { ChangePasswordThrottlerGuard } from './guards/change-password-throttler.guard'
 import { LoginThrottlerGuard } from './guards/login-throttler.guard'
 
 @Controller('auth')
@@ -38,6 +39,7 @@ export class AuthController {
     return user
   }
 
+  @UseGuards(ChangePasswordThrottlerGuard)
   @Patch('password')
   changePassword(
     @CurrentUser() user: any,
