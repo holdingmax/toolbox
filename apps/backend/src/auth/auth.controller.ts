@@ -6,6 +6,7 @@ import { ChangePasswordDto } from './dto/change-password.dto'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { LoginDto } from './dto/login.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { SkipPasswordCheck } from './decorators/skip-password-check.decorator'
 import { ChangePasswordThrottlerGuard } from './guards/change-password-throttler.guard'
 import { LoginThrottlerGuard } from './guards/login-throttler.guard'
 
@@ -35,11 +36,13 @@ export class AuthController {
   }
 
   @Get('me')
+  @SkipPasswordCheck()
   me(@CurrentUser() user: any) {
     return user
   }
 
   @UseGuards(ChangePasswordThrottlerGuard)
+  @SkipPasswordCheck()
   @Patch('password')
   changePassword(
     @CurrentUser() user: any,

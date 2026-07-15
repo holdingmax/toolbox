@@ -5,10 +5,11 @@ import Sidebar from './Sidebar'
 import Header from './Header'
 
 export default function AppLayout() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, usuario } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (usuario?.debe_cambiar_password) return <Navigate to="/cambiar-password-obligatorio" replace />
 
   return (
     <div className="flex min-h-screen bg-bg-base">

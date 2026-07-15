@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import AppLayout from '../components/layout/AppLayout'
 import LoginPage from '../pages/LoginPage'
 import ResetPasswordPage from '../pages/ResetPasswordPage'
+import CambioPasswordObligatorioPage from '../pages/CambioPasswordObligatorioPage'
 import DashboardPage from '../pages/DashboardPage'
 import NivelPage from '../pages/NivelPage'
 import ConfiguracionPage from '../pages/ConfiguracionPage'
@@ -33,6 +34,7 @@ export default function AppRouter() {
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/cambiar-password-obligatorio" element={<CambioPasswordObligatorioPage />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/configuracion" element={<ConfiguracionPage />} />

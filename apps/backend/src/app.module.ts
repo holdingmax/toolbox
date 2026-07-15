@@ -14,6 +14,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard'
+import { MustChangePasswordGuard } from './auth/guards/must-change-password.guard'
 import { RolesGuard } from './auth/guards/roles.guard'
 import { AuditoriaInterceptor } from './common/interceptors/auditoria.interceptor'
 import { NavegacionModule } from './navegacion/navegacion.module'
@@ -43,6 +44,7 @@ import { PrismaModule } from './prisma/prisma.module'
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: MustChangePasswordGuard },
     { provide: APP_INTERCEPTOR, useClass: AuditoriaInterceptor },
   ],
 })
