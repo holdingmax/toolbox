@@ -220,6 +220,26 @@ el futuro: **si cambiás un filtro en uno, revisá el otro.**
   cupo independiente, sin que usuarios detrás de la misma IP corporativa se
   bloqueen entre sí, y sin que alguien con un token robado pueda evadir el límite
   rotando de IP.
+- **Cierre de sesión por inactividad** (`InactivityGuard`, montado dentro del
+  `BrowserRouter` en `AppRouter.tsx`): 30 minutos sin actividad (mouse, teclado,
+  click, scroll) cierran la sesión sola; a los 29 minutos aparece un aviso con
+  cuenta regresiva de 1 minuto y un botón "Seguir conectado". Mientras el aviso
+  está visible, la actividad pasiva ya no alcanza para extender la sesión — solo
+  el clic explícito en el botón cuenta, a propósito (evita que alguien se aleje
+  y el mouse de otra persona/proceso resetee el conteo sin que haya una decisión
+  real de seguir conectado). Es una política 100% del lado del cliente — el JWT
+  en sí sigue siendo válido contra la API hasta su expiración real de 8hs;
+  cerrar sesión acá solo limpia el `localStorage` del navegador.
+
+  **Caso borde conocido, sin resolver a propósito**: si Toolbox está abierto en
+  **más de una pestaña** del mismo navegador, cada pestaña corre su propio timer
+  de inactividad de forma independiente. Como el token vive en `localStorage`
+  (compartido entre pestañas del mismo origen), la pestaña que quede inactiva va
+  a cerrar la sesión igual — y eso también desloguea a la pestaña que sí estaba
+  en uso activo, porque comparten el mismo `localStorage`. Se decidió aceptar
+  este trade-off en vez de agregar coordinación entre pestañas (vía `storage`
+  event o `BroadcastChannel`), por mantener la implementación simple. Si esto
+  se vuelve un problema real en el uso diario, ahí es donde habría que mirar.
 
 ---
 
@@ -266,3 +286,4 @@ aplicaciones que publica. El detalle completo de esta decisión, y las opciones 
 evaluarían si en el futuro se necesitara que Toolbox sí sea una barrera de seguridad
 real, están en
 [`AUDITORIA_SEGURIDAD.md`](./AUDITORIA_SEGURIDAD.md#toolbox-es-un-organizador-de-acceso-no-una-capa-de-seguridad-real-sso).
+
