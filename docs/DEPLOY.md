@@ -129,7 +129,45 @@ general — es una regla operativa concreta de este proyecto:
 
 ---
 
-## 6. Rollback
+## 6. Backups y recuperación (Point-in-Time Recovery)
+
+Confirmado en el dashboard de Render (servicio `toolbox-db` → pestaña Recovery) y
+en el dashboard de Neon el 2026-07-15:
+
+- **Plan real de `toolbox-db`: Basic-256mb — no Free.** `render.yaml` (línea 3)
+  todavía dice `plan: free`; quedó desactualizado porque alguien subió el plan
+  manualmente desde el dashboard de Render después del aprovisionamiento inicial,
+  sin tocar el archivo. **`render.yaml` no es la fuente de verdad del plan vigente
+  de un recurso de Render una vez que ya existe** — el Blueprint solo define el
+  aprovisionamiento inicial; un cambio de plan posterior hecho desde el dashboard
+  no se sincroniza de vuelta al archivo. No asumir el plan de `toolbox-db` (ni del
+  servicio `toolbox`) a partir de este archivo — confirmar en el dashboard si hay
+  alguna duda o decisión que dependa de eso.
+- **Point-in-Time Recovery (producción)**: restauración a cualquier momento de los
+  últimos **7 días**, disponible con un botón directo desde la sección Recovery del
+  dashboard de `toolbox-db`.
+- **Export bajo demanda (producción)**: backup lógico completo, exportable
+  manualmente en cualquier momento desde el mismo dashboard, con retención de al
+  menos 7 días.
+
+No hay ningún mecanismo de backup custom en el repo — ningún `pg_dump`, cron de
+export, ni copia a storage externo (confirmado revisando los únicos `@Cron`
+existentes en el backend: `health-check.service.ts`, que chequea salud de
+herramientas, y `retencion-accesos.service.ts`, que purga `historial_accesos` con
+más de 12 meses — ninguno de los dos es un backup de base de datos). El proyecto
+depende enteramente de lo que Render ofrece nativamente para `toolbox-db`, y con
+el plan Basic-256mb actual eso alcanza (PITR de 7 días + export bajo demanda). Si
+en el futuro se necesitara una copia fuera de la infraestructura de Render (por
+ejemplo por una razón de compliance propia), es trabajo nuevo a evaluar aparte.
+
+**Local-dev (Neon)**: plan **Free**, branch `local-dev` — ventana de point-in-time
+recovery de **6 horas** hacia atrás (contra los 7 días de producción). Menor
+prioridad que producción: es dato de desarrollo, regenerable vía `seed.ts` si
+hiciera falta.
+
+---
+
+## 7. Rollback
 
 **Del lado de Render**: se puede volver a un deploy anterior desde el historial de
 deploys del dashboard (redesplegar un commit previo). Esto revierte el código y el
