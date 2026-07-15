@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import AppLayout from '../components/layout/AppLayout'
+import InactivityGuard from '../components/InactivityGuard'
 import LoginPage from '../pages/LoginPage'
 import ResetPasswordPage from '../pages/ResetPasswordPage'
 import CambioPasswordObligatorioPage from '../pages/CambioPasswordObligatorioPage'
@@ -30,6 +31,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <InactivityGuard />
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<LoginPage />} />

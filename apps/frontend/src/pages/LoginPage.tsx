@@ -39,6 +39,17 @@ export default function LoginPage() {
 
   const { login } = useAuth()
   const navigate = useNavigate()
+  // Leído (y limpiado) una sola vez al montar — lo setea InactivityGuard vía
+  // sessionStorage en vez de state de react-router, porque AppLayout también
+  // redirige a /login por su cuenta y esa carrera pisaba el state.
+  const [cerradaPorInactividad] = useState(() => {
+    const motivo = sessionStorage.getItem('toolbox_logout_motivo')
+    if (motivo === 'inactividad') {
+      sessionStorage.removeItem('toolbox_logout_motivo')
+      return true
+    }
+    return false
+  })
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -153,6 +164,12 @@ export default function LoginPage() {
                   Ingresá tus credenciales para acceder al portal
                 </p>
               </div>
+
+              {cerradaPorInactividad && (
+                <div className="text-sm text-text-primary bg-accent/10 border border-accent/25 rounded-lg px-3 py-2.5 mb-5">
+                  Tu sesión se cerró por inactividad. Volvé a iniciar sesión para continuar.
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
 
