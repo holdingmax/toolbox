@@ -11,6 +11,7 @@ import {
   type HerramientasDisponibles,
 } from '../api/navegacion.api'
 import NivelCard from '../components/NivelCard'
+import AtajoDirectoCard from '../components/AtajoDirectoCard'
 
 function getFechaActual(): string {
   const f = new Intl.DateTimeFormat('es-AR', {
@@ -86,6 +87,8 @@ export default function DashboardPage() {
     }
   }
 
+  const seccionListaLista = !loadingNiveles && !loadingAccesos
+
   return (
     <div className="p-6 max-w-5xl mx-auto flex flex-col min-h-full">
 
@@ -132,34 +135,47 @@ export default function DashboardPage() {
         </p>
       )}
 
-      {/* ── Accesos disponibles (niveles raíz) ─────────────────────── */}
-      <section className="flex-1 mb-8">
-        <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
-          Accesos disponibles
-        </h2>
+      {/* ── Atajo directo (1 sola herramienta) o accesos disponibles (niveles raíz) ── */}
+      {seccionListaLista && disponibles?.total === 1 ? (
+        <section className="mb-8">
+          <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
+            Tu acceso
+          </h2>
+          <AtajoDirectoCard
+            herramienta={disponibles.herramientas[0]}
+            onAbrir={() => handleAbrir(disponibles.herramientas[0].id)}
+            abriendo={openingId === disponibles.herramientas[0].id}
+          />
+        </section>
+      ) : (
+        <section className="flex-1 mb-8">
+          <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
+            Accesos disponibles
+          </h2>
 
-        {loadingNiveles ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => <SkeletonLevelCard key={i} />)}
-          </div>
-        ) : niveles.length === 0 ? (
-          <div className="bg-bg-card border border-border-card rounded-xl p-10 text-center">
-            <p className="text-4xl mb-3">🔒</p>
-            <p className="text-text-primary font-medium mb-1">Sin accesos habilitados</p>
-            <p className="text-text-secondary text-sm">
-              Contactá al administrador para solicitar permisos.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...niveles]
-              .sort((a, b) => a.orden - b.orden)
-              .map((nivel) => (
-                <NivelCard key={nivel.id} nivel={nivel} />
-              ))}
-          </div>
-        )}
-      </section>
+          {!seccionListaLista ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => <SkeletonLevelCard key={i} />)}
+            </div>
+          ) : niveles.length === 0 ? (
+            <div className="bg-bg-card border border-border-card rounded-xl p-10 text-center">
+              <p className="text-4xl mb-3">🔒</p>
+              <p className="text-text-primary font-medium mb-1">Sin accesos habilitados</p>
+              <p className="text-text-secondary text-sm">
+                Contactá al administrador para solicitar permisos.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...niveles]
+                .sort((a, b) => a.orden - b.orden)
+                .map((nivel) => (
+                  <NivelCard key={nivel.id} nivel={nivel} />
+                ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ── Recientes — lista discreta al pie ──────────────────────── */}
       {!loadingAccesos && recientes.length > 0 && (

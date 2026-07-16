@@ -31,3 +31,12 @@ export function paletteGradient(hex: string): string {
   const { r, g, b } = hexToRgb(hex)
   return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.12), rgba(${r}, ${g}, ${b}, 0.03))`
 }
+
+export function initials(nombre: string): string {
+  return nombre
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+}

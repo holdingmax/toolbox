@@ -1,15 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import type { NivelResumen } from '../api/navegacion.api'
 import { getPaletteColor, paletteGradient } from '../utils/colorPalette'
-
-function initials(nombre: string): string {
-  return nombre
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-}
+import IconoConFallback from './IconoConFallback'
 
 function FolderIcon() {
   return (
@@ -74,22 +66,7 @@ export default function NivelCard({ nivel, variant = 'empresa' }: NivelCardProps
         className="flex-[3] min-h-0 overflow-hidden flex items-center justify-center p-6"
         style={{ background: paletteGradient(palette.bg) }}
       >
-        {nivel.icono_url ? (
-          <img
-            src={nivel.icono_url}
-            alt={nivel.nombre}
-            className="max-w-full max-h-full object-contain"
-          />
-        ) : (
-          <div
-            className="w-[88px] h-[88px] rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: palette.bg }}
-          >
-            <span className="text-[28px] font-bold select-none" style={{ color: palette.text }}>
-              {initials(nivel.nombre)}
-            </span>
-          </div>
-        )}
+        <IconoConFallback nombre={nivel.nombre} icono_url={nivel.icono_url} tamano={88} fontTamano={28} />
       </div>
 
       {/* Zona de texto (25%): badge y nombre centrados verticalmente */}
