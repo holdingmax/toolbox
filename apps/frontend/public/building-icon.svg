@@ -1,0 +1,16 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgBuilding" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#bgBuilding)"/>
+  <path fill="#f1f5f9" d="M32 10 L51 22 L13 22 Z"/>
+  <rect x="13" y="22" width="38" height="4" fill="#f1f5f9"/>
+  <rect x="18" y="26" width="4" height="24" fill="#f1f5f9"/>
+  <rect x="26" y="26" width="4" height="24" fill="#f1f5f9"/>
+  <rect x="34" y="26" width="4" height="24" fill="#f1f5f9"/>
+  <rect x="42" y="26" width="4" height="24" fill="#f1f5f9"/>
+  <rect x="12" y="50" width="40" height="4" fill="#f1f5f9"/>
+</svg>

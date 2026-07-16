@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgChart" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#bgChart)"/>
+  <rect x="14" y="34" width="9" height="16" rx="2" fill="#ecfdf5"/>
+  <rect x="27.5" y="24" width="9" height="26" rx="2" fill="#ecfdf5"/>
+  <rect x="41" y="14" width="9" height="36" rx="2" fill="#ecfdf5"/>
+</svg>

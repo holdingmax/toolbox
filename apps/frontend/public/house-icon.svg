@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgHouse" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#bgHouse)"/>
+  <path fill="#fef3c7" d="M32 10 L54 30 L54 52 L10 52 L10 30 Z"/>
+  <circle cx="32" cy="34" r="3.5" fill="#7c2d12"/>
+  <rect x="26" y="40" width="12" height="12" fill="#7c2d12"/>
+</svg>
