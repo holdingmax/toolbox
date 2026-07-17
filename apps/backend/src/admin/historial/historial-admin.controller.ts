@@ -33,4 +33,21 @@ export class HistorialAdminController {
       { usuario_id, herramienta_id, nivel_id, desde, hasta },
     )
   }
+
+  @Get('administracion')
+  findAllAdministracion(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('usuario_id') usuario_id?: string,
+    @Query('entidad') entidad?: string,
+    @Query('accion') accion?: string,
+    @Query('desde') desde?: string,
+    @Query('hasta') hasta?: string,
+  ) {
+    return this.service.findAllAdministracion(
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 20,
+      { usuario_id, entidad, accion, desde, hasta },
+    )
+  }
 }

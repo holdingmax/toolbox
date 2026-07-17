@@ -253,3 +253,37 @@ export const getHistorialUsuarios = () =>
 
 export const getHistorialHerramientas = () =>
   client.get<{ id: string; nombre: string }[]>('/api/admin/historial/herramientas').then((r) => r.data)
+
+// ── Historial de administración ─────────────────────────────────────────────
+
+export interface HistorialAdministracionItem {
+  id: string
+  accion: 'crear' | 'editar' | 'toggle'
+  entidad: 'usuario' | 'nivel' | 'herramienta' | 'permiso' | 'publicacion'
+  entidad_id: string
+  entidad_nombre: string | null
+  cambios: Record<string, unknown> | null
+  ip: string | null
+  fecha: string
+  usuario: { id: string; nombre: string; email: string }
+}
+
+export interface HistorialAdministracionPagedResponse {
+  data: HistorialAdministracionItem[]
+  total: number
+  page: number
+  limit: number
+}
+
+export const getHistorialAdministracion = (params: {
+  page?: number
+  limit?: number
+  usuario_id?: string
+  entidad?: string
+  accion?: string
+  desde?: string
+  hasta?: string
+}) =>
+  client
+    .get<HistorialAdministracionPagedResponse>('/api/admin/historial/administracion', { params })
+    .then((r) => r.data)

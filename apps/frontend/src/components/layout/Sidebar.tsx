@@ -80,8 +80,14 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
           <NavLink to={isAdmin ? '/admin/historial' : '/historial'} className={linkClass} onClick={onClose}>
             <span>📋</span>
-            <span>Historial</span>
+            <span>Historial de accesos</span>
           </NavLink>
+          {isAdmin && (
+            <NavLink to="/admin/historial/administracion" className={linkClass} onClick={onClose}>
+              <span>🛡️</span>
+              <span>Historial de administración</span>
+            </NavLink>
+          )}
           <NavLink to="/configuracion" className={linkClass} onClick={onClose}>
             <span>⚙️</span>
             <span>Configuración</span>

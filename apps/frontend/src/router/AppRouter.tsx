@@ -13,6 +13,7 @@ import NivelesPage from '../pages/admin/NivelesPage'
 import HerramientasPage from '../pages/admin/HerramientasPage'
 import PermisosPage from '../pages/admin/PermisosPage'
 import HistorialPage from '../pages/admin/HistorialPage'
+import HistorialAdministracionPage from '../pages/admin/HistorialAdministracionPage'
 import MiHistorialPage from '../pages/MiHistorialPage'
 
 function RootRedirect() {
@@ -79,6 +80,14 @@ export default function AppRouter() {
             element={
               <AdminRoute>
                 <HistorialPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/historial/administracion"
+            element={
+              <AdminRoute>
+                <HistorialAdministracionPage />
               </AdminRoute>
             }
           />

@@ -103,9 +103,23 @@ export class AuditoriaInterceptor implements NestInterceptor {
     const excluir = CAMPOS_SENSIBLES[entidad] ?? []
     const copia: Registro = {}
     for (const [key, value] of Object.entries(obj)) {
-      if (!excluir.includes(key)) copia[key] = value
+      if (!excluir.includes(key)) copia[key] = this.aplanarRelacion(value)
     }
     return copia
+  }
+
+  // Las respuestas de "crear" a veces incluyen una relación completa (ej.
+  // { rol: {id, nombre, ...} } o { nivel: {id, nombre, ...} }) porque el
+  // service usa `include` para devolverle el dato al frontend. Guardar ese
+  // objeto entero en el log de auditoría no aporta nada y rompe cualquier
+  // render simple de "campo: valor" — se aplana a su nombre (o id si no
+  // tiene nombre) antes de persistir.
+  private aplanarRelacion(valor: unknown): unknown {
+    if (valor === null || typeof valor !== 'object' || valor instanceof Date || Array.isArray(valor)) {
+      return valor
+    }
+    const obj = valor as Record<string, unknown>
+    return (obj.nombre as string | undefined) ?? (obj.id as string | undefined) ?? valor
   }
 
   private diff(
