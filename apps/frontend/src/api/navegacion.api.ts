@@ -25,6 +25,7 @@ export interface NivelDetalle {
   nivel: NivelResumen & { ruta: string; parent_id: string | null }
   hijos: NivelResumen[]
   herramientas: HerramientaResumen[]
+  herramientas_agregadas: HerramientaResumen[] | null
   breadcrumb: { id: string; nombre: string }[]
 }
 

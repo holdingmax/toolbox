@@ -46,7 +46,13 @@ export default function NivelPage() {
     )
   }
 
-  const { nivel, hijos, herramientas, breadcrumb } = detalle
+  const { nivel, hijos, herramientas, herramientas_agregadas, breadcrumb } = detalle
+
+  const idsPropias = new Set(herramientas.map((h) => h.id))
+  const herramientasCombinadas = [
+    ...herramientas,
+    ...(herramientas_agregadas ?? []).filter((h) => !idsPropias.has(h.id)),
+  ]
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -94,43 +100,60 @@ export default function NivelPage() {
         </div>
       </div>
 
-      {/* Hijos */}
-      {hijos.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-text-secondary text-sm font-medium uppercase tracking-wider mb-4">
-            Áreas
-          </h2>
-          <div className="flex flex-col gap-2">
-            {hijos
-              .sort((a, b) => a.orden - b.orden)
-              .map((hijo) => (
-                <NivelCard key={hijo.id} nivel={hijo} variant="area" />
-              ))}
-          </div>
-        </section>
-      )}
-
-      {/* Herramientas */}
-      {herramientas.length > 0 && (
+      {herramientas_agregadas ? (
         <section>
           <h2 className="text-text-secondary text-sm font-medium uppercase tracking-wider mb-4">
             Herramientas disponibles
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            {herramientas
+            {herramientasCombinadas
               .sort((a, b) => a.orden - b.orden)
               .map((h) => (
                 <HerramientaCard key={h.id} herramienta={h} />
               ))}
           </div>
         </section>
-      )}
+      ) : (
+        <>
+          {/* Hijos */}
+          {hijos.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-text-secondary text-sm font-medium uppercase tracking-wider mb-4">
+                Áreas
+              </h2>
+              <div className="flex flex-col gap-2">
+                {hijos
+                  .sort((a, b) => a.orden - b.orden)
+                  .map((hijo) => (
+                    <NivelCard key={hijo.id} nivel={hijo} variant="area" />
+                  ))}
+              </div>
+            </section>
+          )}
 
-      {hijos.length === 0 && herramientas.length === 0 && (
-        <div className="bg-bg-card border border-border-card rounded-xl p-10 text-center">
-          <p className="text-4xl mb-3">📭</p>
-          <p className="text-text-secondary text-sm">Este nivel no tiene contenido disponible.</p>
-        </div>
+          {/* Herramientas */}
+          {herramientas.length > 0 && (
+            <section>
+              <h2 className="text-text-secondary text-sm font-medium uppercase tracking-wider mb-4">
+                Herramientas disponibles
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {herramientas
+                  .sort((a, b) => a.orden - b.orden)
+                  .map((h) => (
+                    <HerramientaCard key={h.id} herramienta={h} />
+                  ))}
+              </div>
+            </section>
+          )}
+
+          {hijos.length === 0 && herramientas.length === 0 && (
+            <div className="bg-bg-card border border-border-card rounded-xl p-10 text-center">
+              <p className="text-4xl mb-3">📭</p>
+              <p className="text-text-secondary text-sm">Este nivel no tiene contenido disponible.</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

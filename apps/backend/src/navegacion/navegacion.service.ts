@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { Nivel } from '@prisma/client'
+import { Nivel, Herramienta } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
@@ -60,22 +60,57 @@ export class NavegacionService {
 
     const herramientas = herramientasNiveles
       .filter((hn) => hn.herramienta.activo)
-      .map((hn) => ({
-        id: hn.herramienta.id,
-        nombre: hn.herramienta.nombre,
-        descripcion: hn.herramienta.descripcion,
-        url: hn.herramienta.url,
-        icono_url: hn.herramienta.icono_url,
-        soporte: hn.herramienta.soporte,
-        orden: hn.herramienta.orden,
-      }))
+      .map((hn) => this.mapHerramienta(hn))
+
+    const herramientas_agregadas = await this.resolverHerramientasAgregadas(hijos)
 
     const breadcrumb = await this.buildBreadcrumb(nivel.ruta)
 
-    return { nivel, hijos, herramientas, breadcrumb }
+    return { nivel, hijos, herramientas, herramientas_agregadas, breadcrumb }
   }
 
   // --- private helpers ---
+
+  // Si TODAS las áreas hijas de este nivel tienen exactamente 1 herramienta
+  // propia y NINGUNA tiene sub-áreas propias (tiene_hijos === false), se
+  // devuelve la lista plana de esas herramientas (una por área) para que el
+  // frontend salte la pantalla intermedia de "Áreas". 100% derivado — se
+  // recalcula en cada carga: si mañana un área pasa a tener 2 herramientas
+  // o gana una sub-área, vuelve a null solo, sin tocar código.
+  private async resolverHerramientasAgregadas(
+    hijos: { id: string; tiene_hijos: boolean }[],
+  ) {
+    if (!hijos.length || hijos.some((h) => h.tiene_hijos)) return null
+
+    const publicaciones = await this.prisma.herramientaNivel.findMany({
+      where: { nivel_id: { in: hijos.map((h) => h.id) }, activo: true },
+      include: { herramienta: true },
+    })
+
+    const porNivel = new Map<string, typeof publicaciones>()
+    for (const pub of publicaciones) {
+      if (!pub.herramienta.activo) continue
+      if (!porNivel.has(pub.nivel_id)) porNivel.set(pub.nivel_id, [])
+      porNivel.get(pub.nivel_id)!.push(pub)
+    }
+
+    const todasConUna = hijos.every((h) => (porNivel.get(h.id)?.length ?? 0) === 1)
+    if (!todasConUna) return null
+
+    return hijos.map((h) => this.mapHerramienta(porNivel.get(h.id)![0]))
+  }
+
+  private mapHerramienta(hn: { herramienta: Herramienta }) {
+    return {
+      id: hn.herramienta.id,
+      nombre: hn.herramienta.nombre,
+      descripcion: hn.herramienta.descripcion,
+      url: hn.herramienta.url,
+      icono_url: hn.herramienta.icono_url,
+      soporte: hn.herramienta.soporte,
+      orden: hn.herramienta.orden,
+    }
+  }
 
   private async getVisibleNodes(usuarioId: string): Promise<Nivel[]> {
     const permisos = await this.prisma.permisoNivel.findMany({
