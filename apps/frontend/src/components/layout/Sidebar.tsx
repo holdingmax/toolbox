@@ -88,6 +88,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               <span>Historial de administración</span>
             </NavLink>
           )}
+          <NavLink to="/proyectos-automatizacion" className={linkClass} onClick={onClose}>
+            <span>🤖</span>
+            <span>Proyectos de automatización</span>
+          </NavLink>
           <NavLink to="/configuracion" className={linkClass} onClick={onClose}>
             <span>⚙️</span>
             <span>Configuración</span>
@@ -114,6 +118,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               <NavLink to="/admin/permisos" className={linkClass} onClick={onClose}>
                 <span className="pl-2">🔑</span>
                 <span>Permisos</span>
+              </NavLink>
+              <NavLink to="/admin/proyectos-automatizacion" className={linkClass} onClick={onClose}>
+                <span className="pl-2">🤖</span>
+                <span>Proyectos de automatización</span>
               </NavLink>
             </div>
           )}

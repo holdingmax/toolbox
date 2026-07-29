@@ -159,6 +159,12 @@ export class HistorialAdminService {
           include: { herramienta: { select: { nombre: true } }, nivel: { select: { nombre: true } } },
         })
         for (const r of rows) mapa.set(`publicacion:${r.id}`, `${r.herramienta.nombre} → ${r.nivel.nombre}`)
+      } else if (entidad === 'proyecto_automatizacion') {
+        const rows = await this.prisma.proyectoAutomatizacion.findMany({
+          where: { id: { in: ids } },
+          select: { id: true, titulo: true },
+        })
+        for (const r of rows) mapa.set(`proyecto_automatizacion:${r.id}`, r.titulo)
       }
     }
 

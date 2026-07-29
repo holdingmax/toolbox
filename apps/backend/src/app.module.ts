@@ -8,6 +8,7 @@ import { HerramientasAdminModule } from './admin/herramientas/herramientas-admin
 import { HistorialAdminModule } from './admin/historial/historial-admin.module'
 import { NivelesAdminModule } from './admin/niveles/niveles-admin.module'
 import { PermisosAdminModule } from './admin/permisos/permisos-admin.module'
+import { ProyectosAutomatizacionModule } from './admin/proyectos-automatizacion/proyectos-automatizacion.module'
 import { RolesModule } from './admin/roles/roles.module'
 import { UsuariosModule } from './admin/usuarios/usuarios.module'
 import { AppController } from './app.controller'
@@ -38,6 +39,7 @@ import { PrismaModule } from './prisma/prisma.module'
     HerramientasAdminModule,
     PermisosAdminModule,
     HistorialAdminModule,
+    ProyectosAutomatizacionModule,
   ],
   controllers: [AppController],
   providers: [

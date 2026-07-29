@@ -11,6 +11,7 @@ const ENTIDAD_LABELS: Record<string, string> = {
   herramienta: 'herramienta',
   permiso: 'permiso',
   publicacion: 'publicación',
+  proyecto_automatizacion: 'proyecto de automatización',
 }
 
 function accionTexto(item: HistorialAdministracionItem): string {

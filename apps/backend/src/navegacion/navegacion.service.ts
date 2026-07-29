@@ -5,13 +5,17 @@ import {
 } from '@nestjs/common'
 import { Nivel, Herramienta } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
+import { PermisosNivelService } from '../common/permisos-nivel/permisos-nivel.service'
 
 @Injectable()
 export class NavegacionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private permisosNivelService: PermisosNivelService,
+  ) {}
 
   async getRootNodes(usuarioId: string) {
-    const visibles = await this.getVisibleNodes(usuarioId)
+    const visibles = await this.permisosNivelService.getVisibleNodes(usuarioId)
     if (!visibles.length) return []
 
     const podados = await this.pruneEmptyBranches(visibles)
@@ -35,7 +39,7 @@ export class NavegacionService {
     const tieneAcceso = await this.verificarAcceso(usuarioId, nivel.ruta)
     if (!tieneAcceso) throw new ForbiddenException()
 
-    const visibles = await this.getVisibleNodes(usuarioId)
+    const visibles = await this.permisosNivelService.getVisibleNodes(usuarioId)
     const podados = await this.pruneEmptyBranches(visibles)
 
     // El nodo pedido también debe tener contenido en su subárbol — si no,
@@ -110,23 +114,6 @@ export class NavegacionService {
       soporte: hn.herramienta.soporte,
       orden: hn.herramienta.orden,
     }
-  }
-
-  private async getVisibleNodes(usuarioId: string): Promise<Nivel[]> {
-    const permisos = await this.prisma.permisoNivel.findMany({
-      where: { usuario_id: usuarioId, activo: true },
-      include: { nivel: true },
-    })
-    if (!permisos.length) return []
-
-    const conditions = permisos.map((p) => ({
-      ruta: { startsWith: p.nivel.ruta },
-    }))
-
-    return this.prisma.nivel.findMany({
-      where: { activo: true, OR: conditions },
-      orderBy: { orden: 'asc' },
-    })
   }
 
   private async pruneEmptyBranches(niveles: Nivel[]): Promise<Nivel[]> {

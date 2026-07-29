@@ -54,10 +54,11 @@ model Nivel {
   creado_en      DateTime @default(now())
   actualizado_en DateTime @updatedAt
 
-  parent               Nivel?             @relation("ArbolNiveles", fields: [parent_id], references: [id], onDelete: Restrict)
-  hijos                Nivel[]            @relation("ArbolNiveles")
-  herramientas_niveles HerramientaNivel[]
-  permisos             PermisoNivel[]
+  parent                   Nivel?                   @relation("ArbolNiveles", fields: [parent_id], references: [id], onDelete: Restrict)
+  hijos                    Nivel[]                  @relation("ArbolNiveles")
+  herramientas_niveles     HerramientaNivel[]
+  permisos                 PermisoNivel[]
+  proyectos_automatizacion ProyectoAutomatizacion[]
 
   @@index([parent_id, activo, orden])
   @@index([ruta])
@@ -132,6 +133,24 @@ model HistorialAcceso {
   @@index([usuario_id, fecha_acceso])
   @@index([herramienta_id, fecha_acceso])
   @@map("historial_accesos")
+}
+
+model ProyectoAutomatizacion {
+  id             String    @id @default(cuid())
+  titulo         String
+  estado         String    @default("pendiente")
+  fecha_inicio   DateTime?
+  notas          String?
+  nivel_id       String
+  activo         Boolean   @default(true)
+  creado_en      DateTime  @default(now())
+  actualizado_en DateTime  @updatedAt
+
+  nivel Nivel @relation(fields: [nivel_id], references: [id], onDelete: Restrict)
+
+  @@index([nivel_id, activo])
+  @@index([estado])
+  @@map("proyectos_automatizacion")
 }
 
 model HistorialAdministracion {

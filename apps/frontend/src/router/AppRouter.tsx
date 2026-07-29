@@ -14,6 +14,8 @@ import HerramientasPage from '../pages/admin/HerramientasPage'
 import PermisosPage from '../pages/admin/PermisosPage'
 import HistorialPage from '../pages/admin/HistorialPage'
 import HistorialAdministracionPage from '../pages/admin/HistorialAdministracionPage'
+import ProyectosAutomatizacionPage from '../pages/admin/ProyectosAutomatizacionPage'
+import ProyectosAutomatizacionTableroPage from '../pages/ProyectosAutomatizacionTableroPage'
 import MiHistorialPage from '../pages/MiHistorialPage'
 
 function RootRedirect() {
@@ -43,6 +45,7 @@ export default function AppRouter() {
           <Route path="/configuracion" element={<ConfiguracionPage />} />
           <Route path="/historial" element={<MiHistorialPage />} />
           <Route path="/nivel/:id" element={<NivelPage />} />
+          <Route path="/proyectos-automatizacion" element={<ProyectosAutomatizacionTableroPage />} />
           <Route
             path="/admin/usuarios"
             element={
@@ -88,6 +91,14 @@ export default function AppRouter() {
             element={
               <AdminRoute>
                 <HistorialAdministracionPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/proyectos-automatizacion"
+            element={
+              <AdminRoute>
+                <ProyectosAutomatizacionPage />
               </AdminRoute>
             }
           />
