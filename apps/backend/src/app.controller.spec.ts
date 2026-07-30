@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return status ok', () => {
-      expect(appController.getHello()).toEqual({ status: 'ok' });
+      expect(appController.getHello()).toEqual({ status: 'ok', commit: 'local' });
     });
   });
 });
