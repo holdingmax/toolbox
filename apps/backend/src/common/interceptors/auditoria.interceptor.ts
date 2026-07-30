@@ -133,7 +133,7 @@ export class AuditoriaInterceptor implements NestInterceptor {
 
     // Se itera sobre las claves de "antes" (siempre un fetch plano del modelo,
     // sin relaciones incluidas) para no comparar campos de relaciones que
-    // algunos services agregan al "despues" (ej. UsuariosService incluye
+    // algunos services agregan al "despues" (ej. UsuariosAdminService incluye
     // "rol") y que aparecerían como falso cambio al no existir en "antes".
     for (const key of Object.keys(antes)) {
       if (excluir.has(key)) continue

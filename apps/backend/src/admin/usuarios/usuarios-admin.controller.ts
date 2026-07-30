@@ -11,12 +11,12 @@ import { Roles } from '../../auth/decorators/roles.decorator'
 import { Auditable } from '../../common/decorators/auditable.decorator'
 import { CreateUsuarioDto } from './dto/create-usuario.dto'
 import { UpdateUsuarioDto } from './dto/update-usuario.dto'
-import { UsuariosService } from './usuarios.service'
+import { UsuariosAdminService } from './usuarios-admin.service'
 
 @Roles('Administrador')
 @Controller('admin/usuarios')
-export class UsuariosController {
-  constructor(private usuariosService: UsuariosService) {}
+export class UsuariosAdminController {
+  constructor(private usuariosService: UsuariosAdminService) {}
 
   @Get()
   findAll(

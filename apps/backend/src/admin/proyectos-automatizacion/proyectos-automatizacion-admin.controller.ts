@@ -3,12 +3,12 @@ import { Roles } from '../../auth/decorators/roles.decorator'
 import { Auditable } from '../../common/decorators/auditable.decorator'
 import { CreateProyectoAutomatizacionDto } from './dto/create-proyecto-automatizacion.dto'
 import { UpdateProyectoAutomatizacionDto } from './dto/update-proyecto-automatizacion.dto'
-import { ProyectosAutomatizacionService } from './proyectos-automatizacion.service'
+import { ProyectosAutomatizacionAdminService } from './proyectos-automatizacion-admin.service'
 
 @Roles('Administrador')
 @Controller('admin/proyectos-automatizacion')
 export class ProyectosAutomatizacionAdminController {
-  constructor(private service: ProyectosAutomatizacionService) {}
+  constructor(private service: ProyectosAutomatizacionAdminService) {}
 
   @Get()
   findAll(

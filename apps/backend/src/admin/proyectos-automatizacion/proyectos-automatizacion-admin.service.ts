@@ -7,7 +7,7 @@ import { UpdateProyectoAutomatizacionDto } from './dto/update-proyecto-automatiz
 const NIVEL_RESUMEN = { select: { id: true, nombre: true } } as const
 
 @Injectable()
-export class ProyectosAutomatizacionService {
+export class ProyectosAutomatizacionAdminService {
   constructor(
     private prisma: PrismaService,
     private permisosNivelService: PermisosNivelService,

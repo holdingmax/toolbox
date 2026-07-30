@@ -9,7 +9,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto'
 import { UpdateUsuarioDto } from './dto/update-usuario.dto'
 
 @Injectable()
-export class UsuariosService {
+export class UsuariosAdminService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(page = 1, limit = 20, buscar = '') {

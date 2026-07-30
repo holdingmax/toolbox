@@ -8,9 +8,9 @@ import { HerramientasAdminModule } from './admin/herramientas/herramientas-admin
 import { HistorialAdminModule } from './admin/historial/historial-admin.module'
 import { NivelesAdminModule } from './admin/niveles/niveles-admin.module'
 import { PermisosAdminModule } from './admin/permisos/permisos-admin.module'
-import { ProyectosAutomatizacionModule } from './admin/proyectos-automatizacion/proyectos-automatizacion.module'
-import { RolesModule } from './admin/roles/roles.module'
-import { UsuariosModule } from './admin/usuarios/usuarios.module'
+import { ProyectosAutomatizacionAdminModule } from './admin/proyectos-automatizacion/proyectos-automatizacion-admin.module'
+import { RolesAdminModule } from './admin/roles/roles-admin.module'
+import { UsuariosAdminModule } from './admin/usuarios/usuarios-admin.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -33,13 +33,13 @@ import { PrismaModule } from './prisma/prisma.module'
     AuthModule,
     NavegacionModule,
     AccesosModule,
-    UsuariosModule,
-    RolesModule,
+    UsuariosAdminModule,
+    RolesAdminModule,
     NivelesAdminModule,
     HerramientasAdminModule,
     PermisosAdminModule,
     HistorialAdminModule,
-    ProyectosAutomatizacionModule,
+    ProyectosAutomatizacionAdminModule,
   ],
   controllers: [AppController],
   providers: [
