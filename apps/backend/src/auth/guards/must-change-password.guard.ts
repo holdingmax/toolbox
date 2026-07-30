@@ -25,7 +25,15 @@ export class MustChangePasswordGuard implements CanActivate {
       select: { debe_cambiar_password: true },
     })
 
-    if (usuario?.debe_cambiar_password) {
+    if (!usuario) {
+      // No debería poder pasar nunca en operación normal (nunca hay borrado
+      // físico) — pero si el usuario del token no existe más (restauración
+      // desde un backup más viejo, mezcla de entornos), fail closed en vez
+      // de dejar pasar sin poder confirmar nada.
+      throw new ForbiddenException('No se pudo verificar tu usuario')
+    }
+
+    if (usuario.debe_cambiar_password) {
       throw new ForbiddenException('Debés cambiar tu contraseña temporal antes de continuar')
     }
 
