@@ -72,6 +72,7 @@
       "ts"
     ],
     "rootDir": "src",
+    "maxWorkers": 1,
     "setupFiles": [
       "<rootDir>/test/jest.setup.ts"
     ],

@@ -1,6 +1,13 @@
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 
+// NOTA: package.json fija "maxWorkers": 1 a propósito. Todas las suites que
+// tocan esta branch de test comparten la misma base física y limpian TODAS
+// las tablas en su afterEach (ver db-test-helper.ts) — con más de un worker,
+// una suite puede borrar los datos de otra a mitad de camino (ya pasó: unique
+// constraint en el seed de una, foreign key violation en la otra). Correr en
+// serie es la restricción, no un ajuste de performance.
+
 // Carga primero .env (local-dev) solo para poder comparar contra ella abajo —
 // nunca se usa como fuente real de conexión en los tests.
 const envLocalDev = dotenv.config({ path: path.resolve(__dirname, '../../.env') })
