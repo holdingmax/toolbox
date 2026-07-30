@@ -77,18 +77,33 @@ revisarlo cuando el código que describe cambia después. Vale la pena tenerlo
 presente para el resto de la documentación también (`ARQUITECTURA.md`,
 `CONVENCIONES.md`), no solo para este archivo puntual.
 
-### 3. Integridad de datos en producción — PENDIENTE, requiere connection string
+### 3. Integridad de datos en producción — PARCIALMENTE VERIFICADO, sin hallazgos hasta el momento, resto pendiente de verificación no bloqueante
 
-No puedo verificar esto sin acceso de solo lectura a producción. Lo que voy a
-chequear en cuanto la tengas:
-- Usuarios activos vs. inactivos, y si `debe_cambiar_password=true` sigue
-  acotado a quienes ya sabíamos (Estefanía Martínez, Jorge Artigas) o cambió.
-- Niveles activos vs. inactivos — ya sabemos que existen "Empresa 3" y
-  "Empresa Pendiente" inactivas (vos misma las confirmaste hace poco); falta
-  ver si hay algo más con pinta de dato de prueba.
-- Permisos huérfanos (`PermisoNivel` apuntando a un `usuario_id` o `nivel_id`
-  que ya no existe o está inactivo de forma inconsistente).
-- Herramientas publicadas en niveles inactivos, o publicaciones duplicadas.
+Corrido por la propia usuaria, con las queries de solo lectura preparadas
+(Render Shell, sin exponer ninguna connection string):
+
+- **Usuarios** (2/5 queries corridas): 9 en total — 8 activos, 1 inactiva
+  (María García, baja lógica ya conocida y esperada). **Nadie tiene
+  `debe_cambiar_password=true` pendiente hoy** — dato distinto al último
+  estado documentado (que tenía a Estefanía Martínez y Jorge Artigas con el
+  flag en `true`); lo más probable es que ambos ya hayan cambiado su
+  contraseña temporal desde entonces, resolviendo el pendiente con
+  normalidad — no es un hallazgo, es una actualización del estado conocido.
+- **Niveles**: 9 en total — 7 activos, coincidiendo exactamente con la
+  estructura real ya documentada (Correo Flash/Operaciones,
+  Havanna/Finanzas, Administración Central/Inversiones e Inversiones
+  Inmobiliarias) más los 2 inactivos ya sabidos ("Empresa 3", "Empresa
+  Pendiente"). Sin nada nuevo o inesperado.
+
+**Sin hallazgos en las 2 queries corridas.**
+
+**Pendiente, no bloqueante** (decisión explícita: no justifica retrasar el
+deploy, según el propio resumen ejecutivo de esta auditoría) — las 3 queries
+restantes, ya preparadas para cuando se quiera retomar:
+- Permisos huérfanos (`PermisoNivel` apuntando a un nivel inactivo con el
+  permiso todavía activo).
+- Herramientas publicadas en niveles inactivos.
+- Publicaciones duplicadas o inactivas residuales de una misma herramienta.
 
 ---
 
