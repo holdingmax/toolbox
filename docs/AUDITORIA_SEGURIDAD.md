@@ -86,23 +86,30 @@ real: el banner de error se muestra, la sesión queda intacta, no hay redirect.
   sobre la base, sin cambio de código). Contraseñas nuevas, aleatorias, distintas
   entre local-dev y producción, generadas y verificadas contra el endpoint real de
   login antes de guardarlas (en Bitwarden, no en archivos del repo).
-- **Aviso de contraseña temporal pendiente de cambio** — commit `d15ea9c`. No es la
-  corrección de una vulnerabilidad sino un refuerzo proactivo de higiene de
-  contraseñas (sugerencia de Álvaro): un usuario nuevo, o alguien a quien un admin le
-  reseteó la contraseña, ve un banner no bloqueante recomendándole cambiarla, con
-  link directo a Configuración. El flag se limpia automáticamente tanto si el usuario
-  cambia su contraseña desde Configuración como si la restablece vía el flujo de
-  "olvidé mi contraseña" — en ambos casos la contraseña pasó a ser elegida por el
-  propio usuario, no asignada por un tercero.
+- **Bloqueo obligatorio de cambio de contraseña temporal** — commit `d15ea9c`
+  (aviso inicial no bloqueante, sugerencia de Álvaro) escalado después a bloqueo
+  real en el commit `ccfb354`. Un usuario nuevo, o alguien a quien un admin le
+  reseteó la contraseña, **no puede usar ningún endpoint ni pantalla de Toolbox**
+  (salvo `GET /api/auth/me` y el propio cambio de contraseña) hasta elegir una
+  contraseña nueva — `MustChangePasswordGuard` (guard global, `APP_GUARD`) lo
+  aplica del lado del servidor con `403` en cualquier endpoint no exceptuado con
+  `@SkipPasswordCheck()`, y el frontend lo refuerza con un redirect duro a una
+  pantalla de pantalla completa (`/cambiar-password-obligatorio`) — no coexiste
+  con el resto de la app como un banner descartable. El flag se limpia
+  automáticamente tanto si el usuario cambia su contraseña desde Configuración
+  como si la restablece vía el flujo de "olvidé mi contraseña" — en ambos casos
+  la contraseña pasó a ser elegida por el propio usuario, no asignada por un
+  tercero.
 
 ### Auditoría e higiene de datos
 
 - **Registro de auditoría de acciones administrativas** (`historial_administracion`)
-  — commit `2513e0b`. Los 13 endpoints de escritura de los 4 módulos admin
-  (usuarios, niveles, herramientas, permisos) quedan auditados vía
-  `@Auditable()` + `AuditoriaInterceptor` global. `password_hash` y `reset_token` se
-  redactan explícitamente y nunca se persisten en el campo `cambios`, ni al crear ni
-  al editar.
+  — commit `2513e0b`. Los endpoints de escritura de los módulos admin quedan
+  auditados vía `@Auditable()` + `AuditoriaInterceptor` global — al momento de
+  escribir esto, **16 endpoints en 5 módulos** (usuarios, niveles, herramientas,
+  permisos, y proyectos de automatización, sumado en julio 2026). `password_hash`
+  y `reset_token` se redactan explícitamente y nunca se persisten en el campo
+  `cambios`, ni al crear ni al editar.
 - **Retención automática de `historial_accesos`** — commit `51a4625`. Job semanal
   (`@Cron`) que purga físicamente registros de acceso con más de 12 meses. Es la
   única tabla del proyecto con borrado físico aceptado como excepción documentada a
