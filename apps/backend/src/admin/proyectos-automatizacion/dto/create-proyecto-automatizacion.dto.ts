@@ -1,15 +1,5 @@
 import { IsDateString, IsIn, IsOptional, IsString, MinLength } from 'class-validator'
-
-// Texto libre validado acá, no un enum de base de datos — sumar un estado
-// nuevo es agregar un string a este array, sin migración.
-export const ESTADOS_PROYECTO_AUTOMATIZACION = [
-  'pendiente',
-  'iniciado',
-  'en_proceso',
-  'testing',
-  'finalizado',
-  'pausado',
-] as const
+import { ESTADOS_GENERALES_PROYECTO } from '../proyectos-automatizacion.constants'
 
 export class CreateProyectoAutomatizacionDto {
   @IsString()
@@ -20,9 +10,9 @@ export class CreateProyectoAutomatizacionDto {
   nivel_id: string
 
   @IsString()
-  @IsIn(ESTADOS_PROYECTO_AUTOMATIZACION)
+  @IsIn(ESTADOS_GENERALES_PROYECTO)
   @IsOptional()
-  estado?: string
+  estado_general?: string
 
   @IsDateString()
   @IsOptional()
@@ -30,5 +20,5 @@ export class CreateProyectoAutomatizacionDto {
 
   @IsString()
   @IsOptional()
-  notas?: string
+  observaciones?: string
 }

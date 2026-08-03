@@ -138,19 +138,33 @@ model HistorialAcceso {
 model ProyectoAutomatizacion {
   id             String    @id @default(cuid())
   titulo         String
-  estado         String    @default("pendiente")
+  estado_general String    @default("normal")
   fecha_inicio   DateTime?
-  notas          String?
+  observaciones  String?
   nivel_id       String
   activo         Boolean   @default(true)
   creado_en      DateTime  @default(now())
   actualizado_en DateTime  @updatedAt
 
-  nivel Nivel @relation(fields: [nivel_id], references: [id], onDelete: Restrict)
+  nivel  Nivel                 @relation(fields: [nivel_id], references: [id], onDelete: Restrict)
+  etapas ProyectoEtapaEstado[]
 
   @@index([nivel_id, activo])
-  @@index([estado])
+  @@index([estado_general])
   @@map("proyectos_automatizacion")
+}
+
+model ProyectoEtapaEstado {
+  id             String   @id @default(cuid())
+  proyecto_id    String
+  etapa          String
+  estado         String   @default("no_alcanzada")
+  actualizado_en DateTime @updatedAt
+
+  proyecto ProyectoAutomatizacion @relation(fields: [proyecto_id], references: [id], onDelete: Restrict)
+
+  @@unique([proyecto_id, etapa])
+  @@map("proyecto_automatizacion_etapas")
 }
 
 model HistorialAdministracion {

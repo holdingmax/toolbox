@@ -1,5 +1,5 @@
 import { IsBoolean, IsDateString, IsIn, IsOptional, IsString } from 'class-validator'
-import { ESTADOS_PROYECTO_AUTOMATIZACION } from './create-proyecto-automatizacion.dto'
+import { ESTADOS_GENERALES_PROYECTO } from '../proyectos-automatizacion.constants'
 
 export class UpdateProyectoAutomatizacionDto {
   @IsString()
@@ -11,9 +11,9 @@ export class UpdateProyectoAutomatizacionDto {
   nivel_id?: string
 
   @IsString()
-  @IsIn(ESTADOS_PROYECTO_AUTOMATIZACION)
+  @IsIn(ESTADOS_GENERALES_PROYECTO)
   @IsOptional()
-  estado?: string
+  estado_general?: string
 
   @IsDateString()
   @IsOptional()
@@ -21,7 +21,7 @@ export class UpdateProyectoAutomatizacionDto {
 
   @IsString()
   @IsOptional()
-  notas?: string
+  observaciones?: string
 
   @IsBoolean()
   @IsOptional()
