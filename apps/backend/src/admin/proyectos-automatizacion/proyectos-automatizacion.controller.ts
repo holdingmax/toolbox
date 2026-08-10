@@ -13,6 +13,6 @@ export class ProyectosAutomatizacionController {
 
   @Get()
   findVisibles(@CurrentUser() user: any) {
-    return this.service.findVisiblesParaUsuario(user.sub)
+    return this.service.findVisiblesParaUsuario(user.sub, user.rol_nombre)
   }
 }

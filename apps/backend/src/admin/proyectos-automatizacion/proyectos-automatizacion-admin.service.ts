@@ -125,7 +125,20 @@ export class ProyectosAutomatizacionAdminService {
   // (PermisosNivelService.getVisibleNodes) — sin la poda por herramientas de
   // navegacion.service.ts, porque un nivel puede tener un proyecto en
   // seguimiento aunque no tenga ninguna herramienta publicada todavía.
-  async findVisiblesParaUsuario(usuarioId: string) {
+  // Administrador ve todos los proyectos activos, sin el filtro de cascada
+  // -- exclusivo de esta vista, no toca navegacion.service.ts ni
+  // accesos.service.ts. rol_nombre viene del JWT (mismo campo que ya usa
+  // RolesGuard), no se vuelve a consultar la base.
+  async findVisiblesParaUsuario(usuarioId: string, rolNombre: string) {
+    if (rolNombre === 'Administrador') {
+      const todos = await this.prisma.proyectoAutomatizacion.findMany({
+        where: { activo: true },
+        include: CON_ETAPAS,
+        orderBy: { actualizado_en: 'desc' },
+      })
+      return todos.map(ordenarEtapas)
+    }
+
     const visibles = await this.permisosNivelService.getVisibleNodes(usuarioId)
     if (!visibles.length) return []
 
